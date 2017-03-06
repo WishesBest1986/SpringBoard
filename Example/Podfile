@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'SpringBoard_Example' do
+  pod 'SpringBoard', :path => '../'
+end

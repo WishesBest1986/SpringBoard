@@ -1,0 +1,6 @@
+framework module SpringBoard {
+  umbrella header "SpringBoard-umbrella.h"
+
+  export *
+  module * { export * }
+}

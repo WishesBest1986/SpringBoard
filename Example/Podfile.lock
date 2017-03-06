@@ -1,0 +1,16 @@
+PODS:
+  - SpringBoard (0.1.0)
+
+DEPENDENCIES:
+  - SpringBoard (from `../`)
+
+EXTERNAL SOURCES:
+  SpringBoard:
+    :path: ../
+
+SPEC CHECKSUMS:
+  SpringBoard: 06ad26bf8ee93e069c64ae20364311b9b17dad32
+
+PODFILE CHECKSUM: 2d92f853764bdd38112cb2eb2264aff2cd618657
+
+COCOAPODS: 1.1.1
