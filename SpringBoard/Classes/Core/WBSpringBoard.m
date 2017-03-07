@@ -13,7 +13,7 @@
 #import "WBIndexRect.h"
 #import "UIView+Layout.h"
 
-@interface WBSpringBoard () <UIScrollViewDelegate>
+@interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
@@ -28,6 +28,8 @@
 
 @property (nonatomic, strong) NSMutableArray *contentIndexRectArray;
 @property (nonatomic, strong) NSMutableArray *contentCellArray;
+
+@property (nonatomic, assign) BOOL isDrag;
 
 @end
 
@@ -114,11 +116,12 @@
         } else {
             cell = [[WBSpringBoardCell alloc] init];
         }
+        cell.frame = CGRectFromString(_frameContainerArray[i]);
+        cell.delegate = self;
+        cell.longGestureDelegate = self;
         
-        CGRect frame = CGRectFromString(_frameContainerArray[i]);
-        cell.frame = frame;
         
-        [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:frame]];
+        [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:cell.frame]];
         [_contentCellArray addObject:cell];
         [_scrollView addSubview:cell];
     }
@@ -174,6 +177,11 @@
     }
 }
 
+- (NSInteger)indexForCell:(WBSpringBoardCell *)cell
+{
+    return [_contentCellArray indexOfObject:cell];
+}
+
 #pragma mark - Setter & Getter
 
 - (void)setLayout:(WBSpringBoardLayout *)layout
@@ -188,6 +196,15 @@
     _dataSource = dataSource;
     
     [self reloadData];
+}
+
+- (void)setIsEdit:(BOOL)isEdit
+{
+    _isEdit = isEdit;
+    
+    for (WBSpringBoardCell *cell in _contentCellArray) {
+        cell.isEdit = isEdit;
+    }
 }
 
 #pragma mark - Public Method
@@ -216,6 +233,47 @@
     } else if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         _pageControl.currentPage = scrollView.contentOffset.y / scrollView.bounds.size.height;
     }
+}
+
+#pragma mark - WBSpringBoardCellDelegate Method
+
+- (void)clickSpringBoardCell:(WBSpringBoardCell *)cell
+{
+    if (self.isEdit) {
+        self.isEdit = NO;
+    }
+}
+
+- (void)editingSpringBoardCell:(WBSpringBoardCell *)cell
+{
+    self.isEdit = YES;
+    
+//    [UIView animateWithDuration:kAnimationDuration animations:^{
+//        cell.transform = CGAffineTransformMakeScale(1.5, 1.5);
+//        cell.alpha = 0.8;
+//    }];
+}
+
+#pragma mark - WBSpringBoardCellLongGestureDelegate Method
+
+- (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateBegin:(UILongPressGestureRecognizer *)gesture
+{
+    
+}
+
+- (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateMove:(UILongPressGestureRecognizer *)gesture
+{
+    
+}
+
+- (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateEnd:(UILongPressGestureRecognizer *)gesture
+{
+    
+}
+
+- (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateCancel:(UILongPressGestureRecognizer *)gesture
+{
+    
 }
 
 @end

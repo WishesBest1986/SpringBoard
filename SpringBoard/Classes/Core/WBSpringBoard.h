@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong) WBSpringBoardLayout *layout;
 
+@property (nonatomic, assign) BOOL isEdit;
+
 - (void)reloadData;
 
 @end
