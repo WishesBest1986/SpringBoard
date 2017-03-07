@@ -7,8 +7,11 @@
 //
 
 #import "WBViewController.h"
+#import <SpringBoard/SpringBoard.h>
 
-@interface WBViewController ()
+@interface WBViewController () <WBSpringBoardDelegate, WBSpringBoardDataSource>
+
+@property (weak, nonatomic) IBOutlet WBSpringBoard *springBoard;
 
 @end
 
@@ -18,12 +21,30 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    _springBoard.delegate = self;
+    _springBoard.dataSource = self;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - WBSpringBoardDelegate Method
+
+#pragma mark - WBSpringBoardDataSource Method
+
+- (NSInteger)numberOfItemsInSpringBoard:(WBSpringBoard *)springBoard
+{
+    return 70;
+}
+
+- (__kindof WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
+{
+    WBSpringBoardCell *cell = [[WBSpringBoardCell alloc] init];
+    return cell;
 }
 
 @end

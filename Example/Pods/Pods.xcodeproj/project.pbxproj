@@ -7,13 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13076964FC1B2DC0EEA41694C6EE651A /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = D3DB327A0A2F3A5364E91FD20F6A6E42 /* UIView+Layout.m */; };
 		200576A7962FEDDB7D10B1F0FECA6310 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
-		4E3D200738D05EFC3C6865FAC410EB44 /* SpringBoard-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7DFC5BA9D91B77C2BBA1AAAF758AB4 /* SpringBoard-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		35C3316F90F7B746B2997772DE7E15BF /* WBSpringBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1834356FE77F85DB8DA52B45A886664D /* WBSpringBoard.m */; };
+		59F1D4E61E2CC543B65ED125575DABEC /* SpringBoard.h in Headers */ = {isa = PBXBuildFile; fileRef = B469C6EE447074D3387C6CC52074EF93 /* SpringBoard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		767D7BE5F703223D0D7C84A7CABE405B /* Pods-SpringBoard_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 953C4BA50857E157BDEB5569857A3EAF /* Pods-SpringBoard_Example-dummy.m */; };
 		7B00A68750C232C7466402C5F4DE0A7B /* Pods-SpringBoard_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B3D5297F8C328B6A82442E2703D573B /* Pods-SpringBoard_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9051FD383A25C670B65F627D240CBE77 /* ReplaceMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8956B4659D80AB2CE32D516D186E96 /* ReplaceMe.m */; };
-		AD0AB8E2836023A2F38A0ACD9EA38D36 /* SpringBoard-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CF8CDCDE59E8AFA02940657AE4402B /* SpringBoard-dummy.m */; };
+		8641BBCA33093C315667C64D86F540EC /* WBSpringBoardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4BF9DAE8C70C095C8B615DB324E6D2 /* WBSpringBoardCell.m */; };
+		872CE846474A45C58753FDB6655B2369 /* SpringBoard-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7DFC5BA9D91B77C2BBA1AAAF758AB4 /* SpringBoard-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		993A94F8D0CF8CD61E48FF2D454A5E2A /* UIView+Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 368CA1AA709342DD76320AF581F28F15 /* UIView+Layout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DE8CD23C20DFA6CFA697EC4C4ABA962 /* WBSpringBoardLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AD2B778EAC3B6C8B511F65B1AFFDB1 /* WBSpringBoardLayout.m */; };
+		A4FC0195BAE7A6BDDA0F435A36F4C6ED /* WBSpringBoardLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 8889B087E461A30125ACF95CB90F3831 /* WBSpringBoardLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AF2A19070940A6E949C24AF988804CD9 /* SpringBoard-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CF8CDCDE59E8AFA02940657AE4402B /* SpringBoard-dummy.m */; };
+		C372745FE31513D520CEDEA714C997FF /* WBSpringBoardDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F47C4590D6717794306B34372186BA2 /* WBSpringBoardDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CC849A8353A999235589F646E0DD4E2B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
+		E2F8E664F56086AE2C5EC2361A40B8E6 /* WBSpringBoard.h in Headers */ = {isa = PBXBuildFile; fileRef = A35891C2C56BB381A052C16D85D2C224 /* WBSpringBoard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F84AFDF8AA5029685CF2E24FF49E9F44 /* WBSpringBoardCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E37946D8D97230850CC69B1877A8CE8 /* WBSpringBoardCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,21 +39,30 @@
 		0FFCF51C51CD53B71BC942F375B3BE39 /* SpringBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SpringBoard.framework; path = SpringBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		11B0A00B1A98166344300F0A53C83DFB /* Pods-SpringBoard_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SpringBoard_Example-resources.sh"; sourceTree = "<group>"; };
 		11FCCFC45B9D09B0C8BA7D98D0A80E78 /* Pods-SpringBoard_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SpringBoard_Example-frameworks.sh"; sourceTree = "<group>"; };
+		1834356FE77F85DB8DA52B45A886664D /* WBSpringBoard.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoard.m; sourceTree = "<group>"; };
 		22CF8CDCDE59E8AFA02940657AE4402B /* SpringBoard-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SpringBoard-dummy.m"; sourceTree = "<group>"; };
 		2B3D5297F8C328B6A82442E2703D573B /* Pods-SpringBoard_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SpringBoard_Example-umbrella.h"; sourceTree = "<group>"; };
+		368CA1AA709342DD76320AF581F28F15 /* UIView+Layout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
 		426D47797BDEBF8DE38E8F9777960274 /* Pods-SpringBoard_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SpringBoard_Example.release.xcconfig"; sourceTree = "<group>"; };
+		44AD2B778EAC3B6C8B511F65B1AFFDB1 /* WBSpringBoardLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardLayout.m; sourceTree = "<group>"; };
 		4BA4B00B0315658BA0948A043AA03444 /* SpringBoard-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SpringBoard-prefix.pch"; sourceTree = "<group>"; };
 		4C7DFC5BA9D91B77C2BBA1AAAF758AB4 /* SpringBoard-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SpringBoard-umbrella.h"; sourceTree = "<group>"; };
 		5599ED17365264246BD4FA98C9023498 /* SpringBoard.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = SpringBoard.modulemap; sourceTree = "<group>"; };
 		7607F1235976D7810C24A7DEC7A1DD5C /* Pods_SpringBoard_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SpringBoard_Example.framework; path = "Pods-SpringBoard_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A8956B4659D80AB2CE32D516D186E96 /* ReplaceMe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ReplaceMe.m; sourceTree = "<group>"; };
+		7D4BF9DAE8C70C095C8B615DB324E6D2 /* WBSpringBoardCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardCell.m; sourceTree = "<group>"; };
 		7D91D500937A666A90A4D98243F22979 /* SpringBoard.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SpringBoard.xcconfig; sourceTree = "<group>"; };
+		7F47C4590D6717794306B34372186BA2 /* WBSpringBoardDefines.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardDefines.h; sourceTree = "<group>"; };
+		8889B087E461A30125ACF95CB90F3831 /* WBSpringBoardLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardLayout.h; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		953C4BA50857E157BDEB5569857A3EAF /* Pods-SpringBoard_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SpringBoard_Example-dummy.m"; sourceTree = "<group>"; };
+		9E37946D8D97230850CC69B1877A8CE8 /* WBSpringBoardCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardCell.h; sourceTree = "<group>"; };
 		A1A070792A3007394C3E792C1AF039D5 /* Pods-SpringBoard_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SpringBoard_Example.modulemap"; sourceTree = "<group>"; };
+		A35891C2C56BB381A052C16D85D2C224 /* WBSpringBoard.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoard.h; sourceTree = "<group>"; };
+		B469C6EE447074D3387C6CC52074EF93 /* SpringBoard.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SpringBoard.h; sourceTree = "<group>"; };
 		B6B6BED958B505B6614A09C0FB06983D /* Pods-SpringBoard_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SpringBoard_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		B93EC7B34863A70BC0C20C62C9BC67C0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		D3DB327A0A2F3A5364E91FD20F6A6E42 /* UIView+Layout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
 		D553E575E8C24AD2CB2260050314C427 /* Pods-SpringBoard_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SpringBoard_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		D7AB98BEB47AB5251E99B1295C35C14A /* Pods-SpringBoard_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SpringBoard_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		FD7A1F31E8D6636203902D02B79F0FC4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,15 +88,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		05A9E802D47CD4EAEFA0855B3713B22B /* SpringBoard */ = {
-			isa = PBXGroup;
-			children = (
-				3087ED9B00A0735EC8E425B0D37BC6C5 /* Classes */,
-			);
-			name = SpringBoard;
-			path = SpringBoard;
-			sourceTree = "<group>";
-		};
 		0D299EC0772475398236DD10F9D5BE09 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -96,13 +105,13 @@
 			name = "Development Pods";
 			sourceTree = "<group>";
 		};
-		3087ED9B00A0735EC8E425B0D37BC6C5 /* Classes */ = {
+		3A843713E9DD81CEA7C0F7C25D7D2A01 /* SpringBoard */ = {
 			isa = PBXGroup;
 			children = (
-				7A8956B4659D80AB2CE32D516D186E96 /* ReplaceMe.m */,
+				838C09037DAEB9AC7BAFD8B65F947A47 /* Classes */,
 			);
-			name = Classes;
-			path = Classes;
+			name = SpringBoard;
+			path = SpringBoard;
 			sourceTree = "<group>";
 		};
 		4E19CF1C11784D2A5B4F54A83AF25814 /* Targets Support Files */ = {
@@ -164,10 +173,21 @@
 			);
 			sourceTree = "<group>";
 		};
+		838C09037DAEB9AC7BAFD8B65F947A47 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B469C6EE447074D3387C6CC52074EF93 /* SpringBoard.h */,
+				C6626CBE08CBD0276947BB251E2F9B16 /* Core */,
+				BD1DCDE839C02F1810C9EDB7686CA9D8 /* Helper */,
+			);
+			name = Classes;
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		B63ABAF33B3A02B82146C5469C8BC9E2 /* SpringBoard */ = {
 			isa = PBXGroup;
 			children = (
-				05A9E802D47CD4EAEFA0855B3713B22B /* SpringBoard */,
+				3A843713E9DD81CEA7C0F7C25D7D2A01 /* SpringBoard */,
 				53230F4F1ABFFACB2CC62E18CE4A2698 /* Support Files */,
 			);
 			name = SpringBoard;
@@ -182,22 +202,53 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BD1DCDE839C02F1810C9EDB7686CA9D8 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				368CA1AA709342DD76320AF581F28F15 /* UIView+Layout.h */,
+				D3DB327A0A2F3A5364E91FD20F6A6E42 /* UIView+Layout.m */,
+				7F47C4590D6717794306B34372186BA2 /* WBSpringBoardDefines.h */,
+			);
+			name = Helper;
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		C6626CBE08CBD0276947BB251E2F9B16 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A35891C2C56BB381A052C16D85D2C224 /* WBSpringBoard.h */,
+				1834356FE77F85DB8DA52B45A886664D /* WBSpringBoard.m */,
+				9E37946D8D97230850CC69B1877A8CE8 /* WBSpringBoardCell.h */,
+				7D4BF9DAE8C70C095C8B615DB324E6D2 /* WBSpringBoardCell.m */,
+				8889B087E461A30125ACF95CB90F3831 /* WBSpringBoardLayout.h */,
+				44AD2B778EAC3B6C8B511F65B1AFFDB1 /* WBSpringBoardLayout.m */,
+			);
+			name = Core;
+			path = Core;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		45B7B8C76ACC9E9AF0BE8CB063CAC3DA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				872CE846474A45C58753FDB6655B2369 /* SpringBoard-umbrella.h in Headers */,
+				59F1D4E61E2CC543B65ED125575DABEC /* SpringBoard.h in Headers */,
+				993A94F8D0CF8CD61E48FF2D454A5E2A /* UIView+Layout.h in Headers */,
+				E2F8E664F56086AE2C5EC2361A40B8E6 /* WBSpringBoard.h in Headers */,
+				F84AFDF8AA5029685CF2E24FF49E9F44 /* WBSpringBoardCell.h in Headers */,
+				C372745FE31513D520CEDEA714C997FF /* WBSpringBoardDefines.h in Headers */,
+				A4FC0195BAE7A6BDDA0F435A36F4C6ED /* WBSpringBoardLayout.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6F58A6377253FB8FBE3D93D456D73ED5 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7B00A68750C232C7466402C5F4DE0A7B /* Pods-SpringBoard_Example-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8320A2A1B15CE83529B75EF3F15A9D9C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4E3D200738D05EFC3C6865FAC410EB44 /* SpringBoard-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,9 +259,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 78FF69536F7212668340728B8667263F /* Build configuration list for PBXNativeTarget "SpringBoard" */;
 			buildPhases = (
-				434D09E93A70100417432E95FC2AAD92 /* Sources */,
+				A65C9C4AF335370BD33112506EC86E84 /* Sources */,
 				E8FEB7AD66D2319917A5F588AB162657 /* Frameworks */,
-				8320A2A1B15CE83529B75EF3F15A9D9C /* Headers */,
+				45B7B8C76ACC9E9AF0BE8CB063CAC3DA /* Headers */,
 			);
 			buildRules = (
 			);
@@ -275,12 +326,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		434D09E93A70100417432E95FC2AAD92 /* Sources */ = {
+		A65C9C4AF335370BD33112506EC86E84 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9051FD383A25C670B65F627D240CBE77 /* ReplaceMe.m in Sources */,
-				AD0AB8E2836023A2F38A0ACD9EA38D36 /* SpringBoard-dummy.m in Sources */,
+				AF2A19070940A6E949C24AF988804CD9 /* SpringBoard-dummy.m in Sources */,
+				13076964FC1B2DC0EEA41694C6EE651A /* UIView+Layout.m in Sources */,
+				35C3316F90F7B746B2997772DE7E15BF /* WBSpringBoard.m in Sources */,
+				8641BBCA33093C315667C64D86F540EC /* WBSpringBoardCell.m in Sources */,
+				9DE8CD23C20DFA6CFA697EC4C4ABA962 /* WBSpringBoardLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
