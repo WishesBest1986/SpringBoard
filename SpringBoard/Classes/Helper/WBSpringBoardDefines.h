@@ -21,4 +21,6 @@
 #define kMinimumHorizontalSpaceDefault 10
 #define kMinimumVerticalSpaceDefault 10
 
+#define kCellInnerRectSideSpace 15
+
 #endif /* WBSpringBoardDefines_h */

@@ -7,10 +7,11 @@
 //
 
 #import "WBSpringBoard.h"
+#import "WBSpringBoardDefines.h"
 #import "WBSpringBoardLayout.h"
 #import "WBSpringBoardCell.h"
+#import "WBIndexRect.h"
 #import "UIView+Layout.h"
-#import "WBSpringBoardDefines.h"
 
 @interface WBSpringBoard () <UIScrollViewDelegate>
 
@@ -22,6 +23,11 @@
 @property (nonatomic, assign) NSInteger pages;
 @property (nonatomic, assign) NSInteger colsPerPage;
 @property (nonatomic, assign) NSInteger rowsPerPage;
+
+@property (nonatomic, strong) NSMutableArray *frameContainerArray;
+
+@property (nonatomic, strong) NSMutableArray *contentIndexRectArray;
+@property (nonatomic, strong) NSMutableArray *contentCellArray;
 
 @end
 
@@ -80,22 +86,48 @@
     
     _layout = [[WBSpringBoardLayout alloc] init];
     
+    _frameContainerArray = [NSMutableArray array];
+    _contentIndexRectArray = [NSMutableArray array];
+    _contentCellArray = [NSMutableArray array];
+    
     [self reloadData];
 }
 
-- (void)asyncLayoutSubviews
+- (void)layoutContentCells
 {
+    __weak __typeof(self)weakSelf = self;
+    
     [self computePages];
-    
-    CGSize scrollViewSize = _scrollView.bounds.size;
+    [self computeFrameContainers];
 
+    [_contentIndexRectArray removeAllObjects];
+    for (UIView *view in _contentCellArray) {
+        [view removeFromSuperview];
+    }
+    [_contentCellArray removeAllObjects];
     
-    
+    for (NSInteger i = 0; i < _numberOfItems; i ++) {
+        WBSpringBoardCell *cell = nil;
+        if (_dataSource) {
+            NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
+            cell = [_dataSource springBoard:weakSelf cellForItemAtIndex:i];
+        } else {
+            cell = [[WBSpringBoardCell alloc] init];
+        }
+        
+        CGRect frame = CGRectFromString(_frameContainerArray[i]);
+        cell.frame = frame;
+        
+        [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:frame]];
+        [_contentCellArray addObject:cell];
+        [_scrollView addSubview:cell];
+    }
+
     CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         t = CGAffineTransformMakeScale(1, _pages);
     }
-    _scrollView.contentSize = CGSizeApplyAffineTransform(scrollViewSize, t);
+    _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
     
     _pageControl.numberOfPages = _pages;
     _pageControl.currentPage = 0;
@@ -112,6 +144,34 @@
     
     NSInteger onePageMaxItems = _colsPerPage * _rowsPerPage;
     _pages = MAX((_numberOfItems + (onePageMaxItems - 1)) / onePageMaxItems, 1);
+}
+
+- (void)computeFrameContainers
+{
+    [_frameContainerArray removeAllObjects];
+    
+    CGSize scrollViewSize = _scrollView.bounds.size;
+    CGSize itemSize = _layout.itemSize;
+    CGFloat itemHSpace = (scrollViewSize.width - (_layout.insets.left + _layout.insets.right) - _colsPerPage * itemSize.width) / (_colsPerPage - 1);
+    CGFloat itemVSpace = (scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom) - _rowsPerPage * itemSize.height) / (_rowsPerPage - 1);
+    
+    for (NSInteger page = 0; page < _pages; page ++) {
+        for (NSInteger row = 0; row < _rowsPerPage; row ++) {
+            for (NSInteger col = 0; col < _colsPerPage; col ++) {
+                CGRect frame = CGRectZero;
+                frame.size = itemSize;
+                
+                frame.origin.x = page * scrollViewSize.width + _layout.insets.left + (itemSize.width + itemHSpace) * col;
+                frame.origin.y = _layout.insets.top + (itemSize.height + itemVSpace) * row;
+                if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+                    frame.origin.x = _layout.insets.left + (itemSize.width + itemHSpace) * col;
+                    frame.origin.y = page * scrollViewSize.height + _layout.insets.top + (itemSize.height + itemVSpace) * row;
+                }
+                
+                [_frameContainerArray addObject:NSStringFromCGRect(frame)];
+            }
+        }
+    }
 }
 
 #pragma mark - Setter & Getter
@@ -143,7 +203,7 @@
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self asyncLayoutSubviews];
+        [self layoutContentCells];
     });
 }
 

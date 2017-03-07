@@ -24,6 +24,7 @@
     
     _springBoard.delegate = self;
     _springBoard.dataSource = self;
+    _springBoard.layout.insets = UIEdgeInsetsMake(20, 10, 30, 10);
 }
 
 - (void)didReceiveMemoryWarning
@@ -44,6 +45,7 @@
 - (__kindof WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
 {
     WBSpringBoardCell *cell = [[WBSpringBoardCell alloc] init];
+    cell.backgroundColor = [UIColor lightGrayColor];
     return cell;
 }
 
