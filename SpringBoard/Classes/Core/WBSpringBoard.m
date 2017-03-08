@@ -17,6 +17,7 @@
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
+@property (nonatomic, strong) WBSpringBoardCell *dragCell;
 
 @property (nonatomic, assign) NSInteger numberOfItems;
 
@@ -25,15 +26,21 @@
 @property (nonatomic, assign) NSInteger rowsPerPage;
 
 @property (nonatomic, strong) NSMutableArray *frameContainerArray;
-
 @property (nonatomic, strong) NSMutableArray *contentIndexRectArray;
 @property (nonatomic, strong) NSMutableArray *contentCellArray;
 
 @property (nonatomic, assign) BOOL isDrag;
+@property (nonatomic, assign) NSInteger dragFromIndex;
+
+@property (nonatomic, assign) CGPoint lastPoint;
+@property (nonatomic, assign) CGPoint previousMovePointAtWindow;
 
 @end
 
 @implementation WBSpringBoard
+
+#define kDragScaleFactor 1.2
+#define kScrollViewDragBoundaryThreshold 30
 
 #pragma mark - Init & Dealloc
 
@@ -182,6 +189,66 @@
     return [_contentCellArray indexOfObject:cell];
 }
 
+- (WBSpringBoardCell *)dragCellWithCell:(WBSpringBoardCell *)cell
+{
+    _isDrag = YES;
+    if (_dragCell) {
+        return _dragCell;
+    }
+    
+    CGRect frame = cell.frame;
+    CGRect dragFrameInWindow = [cell.superview convertRect:frame toView:kAppKeyWindow];
+    
+    _dragCell = [[[cell class] alloc] init];
+    _dragCell.frame = dragFrameInWindow;
+    [kAppKeyWindow addSubview:_dragCell];
+    
+    return _dragCell;
+}
+
+- (double)fingerMoveSpeedWithPreviousPoint:(CGPoint)prePoint nowPoint:(CGPoint)nowPoint
+{
+    double x = pow(prePoint.x - nowPoint.x, 2);
+    double y = pow(prePoint.y - nowPoint.y, 2);
+    return sqrt(x + y);
+}
+
+- (NSDictionary *)targetInfoWithPoint:(CGPoint)scrollPoint
+{
+    NSMutableDictionary *dict = [@{@"targetIndex": @(-1), @"innerRect": @(NO)} mutableCopy];
+    for (WBIndexRect *indexRect in _contentIndexRectArray) {
+        if (CGRectContainsPoint(indexRect.rect, scrollPoint)) {
+            dict[@"targetIndex"] = @(indexRect.index);
+            if (CGRectContainsPoint(indexRect.innerRect, scrollPoint)) {
+                dict[@"innerRect"] = @(YES);
+            }
+            
+            break;
+        }
+    }
+    return dict;
+}
+
+- (void)toPageWithPoint:(CGPoint)scrollPoint
+{
+    CGRect scrollViewLeftSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
+    CGRect scrollViewRightSideRect = CGRectMake(_scrollView.contentOffset.x + CGRectGetWidth(_scrollView.frame) - kScrollViewDragBoundaryThreshold, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
+    
+    if (CGRectContainsPoint(scrollViewLeftSideRect, scrollPoint)) {
+        if (_pageControl.currentPage > 0) {
+            _pageControl.currentPage -= 1;
+            CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
+            [_scrollView setContentOffset:offset animated:YES];
+        }
+    } else if (CGRectContainsPoint(scrollViewRightSideRect, scrollPoint)) {
+        if (_pageControl.currentPage < _pageControl.numberOfPages - 1) {
+            _pageControl.currentPage += 1;
+            CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
+            [_scrollView setContentOffset:offset animated:YES];
+        }
+    }
+}
+
 #pragma mark - Setter & Getter
 
 - (void)setLayout:(WBSpringBoardLayout *)layout
@@ -248,32 +315,78 @@
 {
     self.isEdit = YES;
     
-//    [UIView animateWithDuration:kAnimationDuration animations:^{
-//        cell.transform = CGAffineTransformMakeScale(1.5, 1.5);
-//        cell.alpha = 0.8;
-//    }];
+    _dragFromIndex = [self indexForCell:cell];
+    NSLog(@"%ld", _dragFromIndex);
+    
+    WBSpringBoardCell *dragCell = [self dragCellWithCell:cell];
+    dragCell.backgroundColor = [UIColor redColor];
+    [UIView animateWithDuration:kAnimationDuration animations:^{
+        dragCell.transform = CGAffineTransformMakeScale(kDragScaleFactor, kDragScaleFactor);
+        dragCell.alpha = 0.8;
+    }];
 }
 
 #pragma mark - WBSpringBoardCellLongGestureDelegate Method
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateBegin:(UILongPressGestureRecognizer *)gesture
 {
+    cell.hidden = YES;
     
+    CGPoint beginPoint = [gesture locationInView:cell];
+    _lastPoint = CGPointApplyAffineTransform(beginPoint, CGAffineTransformMakeScale(kDragScaleFactor, kDragScaleFactor));
+    CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
+    _previousMovePointAtWindow = pointAtWindow;
 }
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateMove:(UILongPressGestureRecognizer *)gesture
 {
-    
+    CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
+    CGPoint currentOrigin = CGPointMake(pointAtWindow.x - _lastPoint.x, pointAtWindow.y - _lastPoint.y);
+    if (_isDrag) {
+        CGRect dragFrame = _dragCell.frame;
+        dragFrame.origin = currentOrigin;
+        _dragCell.frame = dragFrame;
+        
+        CGPoint scrollPoint = [gesture locationInView:_scrollView];
+
+        double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
+        _previousMovePointAtWindow = pointAtWindow;
+        if (fingerSpeed < 2) {
+            NSDictionary *targetInfo = [self targetInfoWithPoint:scrollPoint];
+            NSLog(@"%@", targetInfo);
+            
+            NSInteger targetIndex = targetInfo[@"targetIndex"];
+            if (targetIndex > 0 && targetIndex != _dragFromIndex) {
+                
+            }
+        }
+        
+        [self toPageWithPoint:scrollPoint];
+    }
 }
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateEnd:(UILongPressGestureRecognizer *)gesture
 {
+    cell.hidden = NO;
     
+    if (_isDrag) {
+        _isDrag = NO;
+        
+        [_dragCell removeFromSuperview];
+        _dragCell = nil;
+    }
 }
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateCancel:(UILongPressGestureRecognizer *)gesture
 {
-    
+    cell.hidden = NO;
+
+    if (_isDrag) {
+        _isDrag = NO;
+        
+        [_dragCell removeFromSuperview];
+        _dragCell = nil;
+    }
 }
 
 @end
