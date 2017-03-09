@@ -17,7 +17,7 @@
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
-@property (nonatomic, strong) WBSpringBoardCell *dragCell;
+@property (nonatomic, strong) UIView *dragView;
 
 @property (nonatomic, assign) NSInteger numberOfItems;
 
@@ -140,7 +140,7 @@
     _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
     
     _pageControl.numberOfPages = _pages;
-    _pageControl.currentPage = 0;
+    _pageControl.currentPage = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
 }
 
 - (void)computePages
@@ -189,21 +189,21 @@
     return [_contentCellArray indexOfObject:cell];
 }
 
-- (WBSpringBoardCell *)dragCellWithCell:(WBSpringBoardCell *)cell
+- (UIView *)dragViewWithCell:(WBSpringBoardCell *)cell
 {
     _isDrag = YES;
-    if (_dragCell) {
-        return _dragCell;
+    if (_dragView) {
+        return _dragView;
     }
     
     CGRect frame = cell.frame;
     CGRect dragFrameInWindow = [cell.superview convertRect:frame toView:kAppKeyWindow];
     
-    _dragCell = [[[cell class] alloc] init];
-    _dragCell.frame = dragFrameInWindow;
-    [kAppKeyWindow addSubview:_dragCell];
+    _dragView = [cell snapshotViewAfterScreenUpdates:NO];
+    _dragView.frame = dragFrameInWindow;
+    [kAppKeyWindow addSubview:_dragView];
     
-    return _dragCell;
+    return _dragView;
 }
 
 - (double)fingerMoveSpeedWithPreviousPoint:(CGPoint)prePoint nowPoint:(CGPoint)nowPoint
@@ -247,6 +247,16 @@
             [_scrollView setContentOffset:offset animated:YES];
         }
     }
+}
+
+- (void)sortContentCellsWithAnimated:(BOOL)animated
+{
+    [UIView animateWithDuration:(animated ? kAnimationSlowDuration : 0.0) animations:^{
+        for (NSInteger i = 0; i < _contentCellArray.count; i ++) {
+            UIView *view = _contentCellArray[i];
+            view.frame = CGRectFromString(_frameContainerArray[i]);
+        }
+    }];
 }
 
 #pragma mark - Setter & Getter
@@ -308,6 +318,8 @@
 {
     if (self.isEdit) {
         self.isEdit = NO;
+        
+        [self reloadData];
     }
 }
 
@@ -318,11 +330,11 @@
     _dragFromIndex = [self indexForCell:cell];
     NSLog(@"%ld", _dragFromIndex);
     
-    WBSpringBoardCell *dragCell = [self dragCellWithCell:cell];
-    dragCell.backgroundColor = [UIColor redColor];
+    UIView *dragView = [self dragViewWithCell:cell];
+    dragView.backgroundColor = [UIColor redColor];
     [UIView animateWithDuration:kAnimationDuration animations:^{
-        dragCell.transform = CGAffineTransformMakeScale(kDragScaleFactor, kDragScaleFactor);
-        dragCell.alpha = 0.8;
+        dragView.transform = CGAffineTransformMakeScale(kDragScaleFactor, kDragScaleFactor);
+        dragView.alpha = 0.8;
     }];
 }
 
@@ -340,12 +352,14 @@
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateMove:(UILongPressGestureRecognizer *)gesture
 {
+    __weak __typeof(self)weakSelf = self;
+    
     CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
     CGPoint currentOrigin = CGPointMake(pointAtWindow.x - _lastPoint.x, pointAtWindow.y - _lastPoint.y);
     if (_isDrag) {
-        CGRect dragFrame = _dragCell.frame;
-        dragFrame.origin = currentOrigin;
-        _dragCell.frame = dragFrame;
+        CGRect dragViewFrame = _dragView.frame;
+        dragViewFrame.origin = currentOrigin;
+        _dragView.frame = dragViewFrame;
         
         CGPoint scrollPoint = [gesture locationInView:_scrollView];
 
@@ -353,11 +367,17 @@
         _previousMovePointAtWindow = pointAtWindow;
         if (fingerSpeed < 2) {
             NSDictionary *targetInfo = [self targetInfoWithPoint:scrollPoint];
-            NSLog(@"%@", targetInfo);
-            
-            NSInteger targetIndex = targetInfo[@"targetIndex"];
-            if (targetIndex > 0 && targetIndex != _dragFromIndex) {
+            NSInteger targetIndex = [targetInfo[@"targetIndex"] integerValue];
+            if (targetIndex >= 0 && targetIndex != _dragFromIndex) {
+                [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                [_contentCellArray insertObject:cell atIndex:targetIndex];
+                [self sortContentCellsWithAnimated:YES];
                 
+                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
+                    [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                }
+                
+                _dragFromIndex = targetIndex;
             }
         }
         
@@ -372,8 +392,8 @@
     if (_isDrag) {
         _isDrag = NO;
         
-        [_dragCell removeFromSuperview];
-        _dragCell = nil;
+        [_dragView removeFromSuperview];
+        _dragView = nil;
     }
 }
 
@@ -384,8 +404,8 @@
     if (_isDrag) {
         _isDrag = NO;
         
-        [_dragCell removeFromSuperview];
-        _dragCell = nil;
+        [_dragView removeFromSuperview];
+        _dragView = nil;
     }
 }
 

@@ -17,6 +17,7 @@
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		F44FA7931E71009C00EBF807 /* WBCustomerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F44FA7921E71009C00EBF807 /* WBCustomerCell.m */; };
 		FDAAAE01C0B6571B95983E86 /* Pods_SpringBoard_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4593EA15126E63C3FB37967B /* Pods_SpringBoard_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,8 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B56637E18733AE2BAD18BDD4 /* SpringBoard.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SpringBoard.podspec; path = ../SpringBoard.podspec; sourceTree = "<group>"; };
 		DE65D1691E327E61DC4A74A7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		F44FA7911E71009C00EBF807 /* WBCustomerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCell.h; sourceTree = "<group>"; };
+		F44FA7921E71009C00EBF807 /* WBCustomerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,8 @@
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
+				F44FA7911E71009C00EBF807 /* WBCustomerCell.h */,
+				F44FA7921E71009C00EBF807 /* WBCustomerCell.m */,
 			);
 			name = "Example for SpringBoard";
 			path = SpringBoard;
@@ -255,6 +260,7 @@
 			files = (
 				6003F59E195388D20070C39A /* WBAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* WBViewController.m in Sources */,
+				F44FA7931E71009C00EBF807 /* WBCustomerCell.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,7 +325,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -357,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

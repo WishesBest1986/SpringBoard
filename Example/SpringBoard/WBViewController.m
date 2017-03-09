@@ -8,10 +8,13 @@
 
 #import "WBViewController.h"
 #import <SpringBoard/SpringBoard.h>
+#import "WBCustomerCell.h"
 
 @interface WBViewController () <WBSpringBoardDelegate, WBSpringBoardDataSource>
 
 @property (weak, nonatomic) IBOutlet WBSpringBoard *springBoard;
+
+@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -22,9 +25,15 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    _dataArray = [NSMutableArray array];
+    for (int i = 0; i < 70; i ++) {
+        [_dataArray addObject:[NSString stringWithFormat:@"%d", i]];
+    }
+    
     _springBoard.delegate = self;
     _springBoard.dataSource = self;
-    _springBoard.layout.insets = UIEdgeInsetsMake(20, 10, 30, 10);
+    _springBoard.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
+    _springBoard.layout.minimumHorizontalSpace = 5;
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,14 +48,28 @@
 
 - (NSInteger)numberOfItemsInSpringBoard:(WBSpringBoard *)springBoard
 {
-    return 70;
+    return _dataArray.count;
 }
 
-- (__kindof WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
+- (WBCustomerCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
 {
-    WBSpringBoardCell *cell = [[WBSpringBoardCell alloc] init];
+    WBCustomerCell *cell = [[WBCustomerCell alloc] init];
     cell.backgroundColor = [UIColor lightGrayColor];
+    
+    cell.label.text = _dataArray[index];
+    [cell.label sizeToFit];
+    cell.label.center = cell.center;
+    
     return cell;
+}
+
+- (void)springBoard:(WBSpringBoard *)springBoard moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
+{
+    NSString *data = _dataArray[sourceIndex];
+    [_dataArray removeObjectAtIndex:sourceIndex];
+    [_dataArray insertObject:data atIndex:destinationIndex];
+    
+    NSLog(@"%@", _dataArray);
 }
 
 @end
