@@ -8,6 +8,13 @@
 
 #import "WBSpringBoardCell.h"
 #import "WBSpringBoardDefines.h"
+#import <Masonry/Masonry.h>
+
+@interface WBSpringBoardCell ()
+
+@property (nonatomic, weak) UIView *directoryView;
+
+@end
 
 @implementation WBSpringBoardCell
 
@@ -21,6 +28,18 @@
         
         _longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
         [self addGestureRecognizer:_longGesture];
+        
+        UIView *directoryView = [[UIView alloc] initWithFrame:CGRectZero];
+        directoryView.layer.borderColor = [UIColor blueColor].CGColor;
+        directoryView.layer.borderWidth = 0.5;
+        directoryView.layer.cornerRadius = 5;
+        directoryView.userInteractionEnabled = NO;
+        [self addSubview:directoryView];
+        [directoryView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        }];
+        
+        _directoryView = directoryView;
     }
     return self;
 }

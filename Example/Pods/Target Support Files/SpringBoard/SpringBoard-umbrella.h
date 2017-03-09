@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#import "WBIndexRect.h"
 #import "WBSpringBoard.h"
 #import "WBSpringBoardCell.h"
 #import "WBSpringBoardLayout.h"

@@ -11,7 +11,7 @@
 #import "WBSpringBoardLayout.h"
 #import "WBSpringBoardCell.h"
 #import "WBIndexRect.h"
-#import "UIView+Layout.h"
+#import <Masonry/Masonry.h>
 
 @interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
 
@@ -80,28 +80,27 @@
     scrollView.pagingEnabled = YES;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:scrollView];
+    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(scrollView.superview);
+    }];
     _scrollView = scrollView;
-    
-    [scrollView layoutWithHorizontalAlignment:HStretch
-                        withVerticalAlignment:VStretch
-                                   withMargin:ThicknessZero()];
-    
+
     UIPageControl *pageControl = [[UIPageControl alloc] init];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
     pageControl.enabled = NO;
-    pageControl.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     pageControl.numberOfPages = 1;
     [self addSubview:pageControl];
+    [pageControl sizeToFit];
+    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(pageControl.superview);
+        make.width.mas_equalTo(pageControl.superview);
+        make.height.mas_equalTo(pageControl.bounds.size.height);
+        make.bottom.mas_equalTo(pageControl.superview);
+    }];
     _pageControl = pageControl;
 
-    [pageControl sizeToFit];
-    [pageControl layoutWithHorizontalAlignment:HCenter
-                         withVerticalAlignment:VBottom
-                                    withMargin:ThicknessZero()];
-    
     _layout = [[WBSpringBoardLayout alloc] init];
     
     _frameContainerArray = [NSMutableArray array];

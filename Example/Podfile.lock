@@ -1,5 +1,7 @@
 PODS:
-  - SpringBoard (0.1.0)
+  - Masonry (1.0.2)
+  - SpringBoard (0.1.0):
+    - Masonry (~> 1.0.2)
 
 DEPENDENCIES:
   - SpringBoard (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  SpringBoard: b26db56c6b0d995709d64144dc68d55745a81984
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  SpringBoard: 4c6bdd46df59fa8e8aaaa9a601788a3a9831fd8b
 
 PODFILE CHECKSUM: 2d92f853764bdd38112cb2eb2264aff2cd618657
 

@@ -55,10 +55,7 @@
 {
     WBCustomerCell *cell = [[WBCustomerCell alloc] init];
     cell.backgroundColor = [UIColor lightGrayColor];
-    
     cell.label.text = _dataArray[index];
-    [cell.label sizeToFit];
-    cell.label.center = cell.center;
     
     return cell;
 }

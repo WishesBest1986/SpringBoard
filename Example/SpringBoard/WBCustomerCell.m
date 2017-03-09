@@ -7,6 +7,7 @@
 //
 
 #import "WBCustomerCell.h"
+#import <Masonry/Masonry.h>
 
 @implementation WBCustomerCell
 
@@ -15,8 +16,10 @@
     self = [super init];
     if (self) {
         _label = [[UILabel alloc] init];
-        _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:_label];
+        [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self);
+        }];
     }
     return self;
 }
