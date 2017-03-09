@@ -35,4 +35,6 @@
 @property (nonatomic, assign) BOOL isDirectory;
 @property (nonatomic, assign) BOOL isEdit;
 
+@property (nonatomic, assign) BOOL showDirectoryView;
+
 @end

@@ -10,8 +10,9 @@
 #define SpringBoard_h
 
 #include "WBSpringBoardDefines.h"
+#include "WBSpringBoardLayout.h"
 #include "WBSpringBoard.h"
 #include "WBSpringBoardCell.h"
-#include "WBSpringBoardLayout.h"
+#include "WBSpringBoardDirectoryCell.h"
 
 #endif /* SpringBoard_h */

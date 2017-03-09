@@ -425,6 +425,7 @@
         if (fingerSpeed < 2) {
             NSDictionary *targetInfo = [self targetInfoWithPoint:scrollPoint];
             NSInteger targetIndex = [targetInfo[@"targetIndex"] integerValue];
+            
             if (targetIndex >= 0 && targetIndex != _dragFromIndex) {
                 [_contentCellArray removeObjectAtIndex:_dragFromIndex];
                 [_contentCellArray insertObject:cell atIndex:targetIndex];

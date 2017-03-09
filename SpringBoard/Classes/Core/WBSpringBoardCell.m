@@ -34,6 +34,7 @@
         directoryView.layer.borderWidth = 0.5;
         directoryView.layer.cornerRadius = 5;
         directoryView.userInteractionEnabled = NO;
+        directoryView.hidden = YES;
         [self addSubview:directoryView];
         [directoryView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
@@ -59,6 +60,26 @@
         rockAnimation.duration = 0.3;
         rockAnimation.removedOnCompletion = NO;
         [self.layer addAnimation:rockAnimation forKey:@"rocking"];
+    }
+}
+
+- (void)setShowDirectoryView:(BOOL)showDirectoryView
+{
+    if (_showDirectoryView != showDirectoryView) {
+        _showDirectoryView = showDirectoryView;
+        
+        if (showDirectoryView) {
+            _directoryView.hidden = NO;
+            [UIView animateWithDuration:kAnimationSlowDuration animations:^{
+                _directoryView.layer.affineTransform = CGAffineTransformMakeScale(1.2, 1.2);
+            }];
+        } else {
+            [UIView animateWithDuration:kAnimationSlowDuration animations:^{
+                _directoryView.layer.affineTransform = CGAffineTransformIdentity;
+            } completion:^(BOOL finished) {
+                _directoryView.hidden = YES;
+            }];
+        }
     }
 }
 
