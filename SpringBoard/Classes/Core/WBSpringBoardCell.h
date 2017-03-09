@@ -30,6 +30,7 @@
 
 @property (nonatomic, weak) id<WBSpringBoardCellDelegate> delegate;
 @property (nonatomic, weak) id<WBSpringBoardCellLongGestureDelegate> longGestureDelegate;
+@property (nonatomic, readonly) UILongPressGestureRecognizer *longGesture;
 
 @property (nonatomic, assign) BOOL isDirectory;
 @property (nonatomic, assign) BOOL isEdit;

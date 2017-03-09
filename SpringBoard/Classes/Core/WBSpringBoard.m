@@ -34,6 +34,9 @@
 
 @property (nonatomic, assign) CGPoint lastPoint;
 @property (nonatomic, assign) CGPoint previousMovePointAtWindow;
+@property (nonatomic, assign) CGPoint currentMovePointAtScrollView;
+
+@property (nonatomic, strong) dispatch_source_t flipDetectTimer;
 
 @end
 
@@ -41,6 +44,7 @@
 
 #define kDragScaleFactor 1.2
 #define kScrollViewDragBoundaryThreshold 30
+#define kFlipDetectTimeInterval 0.5
 
 #pragma mark - Init & Dealloc
 
@@ -60,6 +64,11 @@
         [self commonInit];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [self stopDetectFlipTimer];
 }
 
 #pragma mark - Private Method
@@ -191,7 +200,7 @@
 
 - (UIView *)dragViewWithCell:(WBSpringBoardCell *)cell
 {
-    _isDrag = YES;
+    self.isDrag = YES;
     if (_dragView) {
         return _dragView;
     }
@@ -229,8 +238,44 @@
     return dict;
 }
 
-- (void)toPageWithPoint:(CGPoint)scrollPoint
+
+- (void)sortContentCellsWithAnimated:(BOOL)animated
 {
+    [UIView animateWithDuration:(animated ? kAnimationSlowDuration : 0.0) animations:^{
+        for (NSInteger i = 0; i < _contentCellArray.count; i ++) {
+            UIView *view = _contentCellArray[i];
+            view.frame = CGRectFromString(_frameContainerArray[i]);
+        }
+    }];
+}
+
+- (void)startDetectFlipTimer
+{
+    [self stopDetectFlipTimer];
+    
+    dispatch_queue_t dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    _flipDetectTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatchQueue);
+    dispatch_source_set_timer(_flipDetectTimer, DISPATCH_TIME_NOW, kFlipDetectTimeInterval * NSEC_PER_SEC, 0 * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(_flipDetectTimer, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self detectScrollViewFlipBasedOnCurrentMovePoint];
+        });
+    });
+    dispatch_resume(_flipDetectTimer);
+}
+
+- (void)stopDetectFlipTimer
+{
+    if (_flipDetectTimer) {
+        dispatch_source_cancel(_flipDetectTimer);
+        _flipDetectTimer = nil;
+    }
+}
+
+- (void)detectScrollViewFlipBasedOnCurrentMovePoint
+{
+    CGPoint scrollPoint = _currentMovePointAtScrollView;
+    
     CGRect scrollViewLeftSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
     CGRect scrollViewRightSideRect = CGRectMake(_scrollView.contentOffset.x + CGRectGetWidth(_scrollView.frame) - kScrollViewDragBoundaryThreshold, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
     
@@ -247,16 +292,6 @@
             [_scrollView setContentOffset:offset animated:YES];
         }
     }
-}
-
-- (void)sortContentCellsWithAnimated:(BOOL)animated
-{
-    [UIView animateWithDuration:(animated ? kAnimationSlowDuration : 0.0) animations:^{
-        for (NSInteger i = 0; i < _contentCellArray.count; i ++) {
-            UIView *view = _contentCellArray[i];
-            view.frame = CGRectFromString(_frameContainerArray[i]);
-        }
-    }];
 }
 
 #pragma mark - Setter & Getter
@@ -277,10 +312,25 @@
 
 - (void)setIsEdit:(BOOL)isEdit
 {
-    _isEdit = isEdit;
-    
-    for (WBSpringBoardCell *cell in _contentCellArray) {
-        cell.isEdit = isEdit;
+    if (_isEdit != isEdit) {
+        _isEdit = isEdit;
+        
+        for (WBSpringBoardCell *cell in _contentCellArray) {
+            cell.isEdit = isEdit;
+        }
+    }
+}
+
+- (void)setIsDrag:(BOOL)isDrag
+{
+    if (_isDrag != isDrag) {
+        _isDrag = isDrag;
+        
+        if (isDrag) {
+            [self startDetectFlipTimer];
+        } else {
+            [self stopDetectFlipTimer];
+        }
     }
 }
 
@@ -303,6 +353,16 @@
 
 #pragma mark - UIScrollViewDelegate Method
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (_isDrag) {
+        // Ajust currentMovePointAtScrollView when [_scrollView setContentOffset:offset animated:YES]
+        // fix mistake value when auto flip while gesture not moved.
+        WBSpringBoardCell *dragedCell = _contentCellArray[_dragFromIndex];
+        _currentMovePointAtScrollView = [dragedCell.longGesture locationInView:scrollView];
+    }
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionHorizontal) {
@@ -318,8 +378,6 @@
 {
     if (self.isEdit) {
         self.isEdit = NO;
-        
-        [self reloadData];
     }
 }
 
@@ -328,7 +386,6 @@
     self.isEdit = YES;
     
     _dragFromIndex = [self indexForCell:cell];
-    NSLog(@"%ld", _dragFromIndex);
     
     UIView *dragView = [self dragViewWithCell:cell];
     dragView.backgroundColor = [UIColor redColor];
@@ -362,6 +419,7 @@
         _dragView.frame = dragViewFrame;
         
         CGPoint scrollPoint = [gesture locationInView:_scrollView];
+        _currentMovePointAtScrollView = scrollPoint;
 
         double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
         _previousMovePointAtWindow = pointAtWindow;
@@ -380,8 +438,6 @@
                 _dragFromIndex = targetIndex;
             }
         }
-        
-        [self toPageWithPoint:scrollPoint];
     }
 }
 
@@ -390,7 +446,7 @@
     cell.hidden = NO;
     
     if (_isDrag) {
-        _isDrag = NO;
+        self.isDrag = NO;
         
         [_dragView removeFromSuperview];
         _dragView = nil;
@@ -402,7 +458,7 @@
     cell.hidden = NO;
 
     if (_isDrag) {
-        _isDrag = NO;
+        self.isDrag = NO;
         
         [_dragView removeFromSuperview];
         _dragView = nil;

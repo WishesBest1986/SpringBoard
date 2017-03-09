@@ -19,8 +19,8 @@
     if (self) {
         [self addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
-        [self addGestureRecognizer:longGesture];
+        _longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
+        [self addGestureRecognizer:_longGesture];
     }
     return self;
 }
