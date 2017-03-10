@@ -1,12 +1,12 @@
 //
-//  WBSpringBoard.m
+//  WBSpringBoardComponent.m
 //  Pods
 //
-//  Created by LIJUN on 2017/3/7.
+//  Created by LIJUN on 2017/3/10.
 //
 //
 
-#import "WBSpringBoard.h"
+#import "WBSpringBoardComponent.h"
 #import "WBSpringBoardDefines.h"
 #import "WBSpringBoardLayout.h"
 #import "WBSpringBoardCell.h"
@@ -15,7 +15,7 @@
 #import <Masonry/Masonry.h>
 #import "WBSpringBoardCombinedPopup.h"
 
-@interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
+@interface WBSpringBoardComponent ( ) <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
@@ -43,7 +43,7 @@
 
 @end
 
-@implementation WBSpringBoard
+@implementation WBSpringBoardComponent
 
 #define kDragScaleFactor 1.2
 #define kScrollViewDragBoundaryThreshold 30
@@ -97,7 +97,7 @@
         make.edges.mas_equalTo(scrollView.superview);
     }];
     _scrollView = scrollView;
-
+    
     UIPageControl *pageControl = [[UIPageControl alloc] init];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
@@ -112,7 +112,7 @@
         make.bottom.mas_equalTo(pageControl.superview);
     }];
     _pageControl = pageControl;
-
+    
     _layout = [[WBSpringBoardLayout alloc] init];
     
     _frameContainerArray = [NSMutableArray array];
@@ -128,7 +128,7 @@
     
     [self computePages];
     [self computeFrameContainers];
-
+    
     [_contentIndexRectArray removeAllObjects];
     for (UIView *view in _contentCellArray) {
         [view removeFromSuperview];
@@ -138,8 +138,8 @@
     for (NSInteger i = 0; i < _numberOfItems; i ++) {
         WBSpringBoardCell *cell = nil;
         if (_dataSource) {
-            NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
-            cell = [_dataSource springBoard:weakSelf cellForItemAtIndex:i];
+            NSAssert([_dataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
+            cell = [_dataSource springBoardComponent:weakSelf cellForItemAtIndex:i];
         } else {
             cell = [[WBSpringBoardCell alloc] init];
         }
@@ -152,7 +152,7 @@
         [_contentCellArray addObject:cell];
         [_scrollView addSubview:cell];
     }
-
+    
     CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         t = CGAffineTransformMakeScale(1, _pages);
@@ -168,7 +168,7 @@
     CGSize scrollViewSize = _scrollView.bounds.size;
     CGFloat maximumContentWidth = scrollViewSize.width - (_layout.insets.left + _layout.insets.right);
     CGFloat maximumContentHeight = scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom);
-
+    
     _colsPerPage = (maximumContentWidth + _layout.minimumHorizontalSpace) / (_layout.itemSize.width + _layout.minimumHorizontalSpace);
     _rowsPerPage = (maximumContentHeight + _layout.minimumVerticalSpace) / (_layout.itemSize.height + _layout.minimumVerticalSpace);
     
@@ -266,10 +266,10 @@
     
     _numberOfItems = 0;
     if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoard:)], @"@selector(numberOfItemsInSpringBoard:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoard:weakSelf];
+        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
+        _numberOfItems = [_dataSource numberOfItemsInSpringBoardComponent:weakSelf];
     }
-
+    
     [self computePages];
     [self computeFrameContainers];
     
@@ -277,7 +277,7 @@
     for (NSInteger i = 0; i < _numberOfItems; i ++) {
         [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:CGRectFromString(_frameContainerArray[i])]];
     }
-
+    
     CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         t = CGAffineTransformMakeScale(1, _pages);
@@ -397,8 +397,8 @@
     
     _numberOfItems = 0;
     if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoard:)], @"@selector(numberOfItemsInSpringBoard:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoard:weakSelf];
+        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
+        _numberOfItems = [_dataSource numberOfItemsInSpringBoardComponent:weakSelf];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -479,7 +479,7 @@
         
         CGPoint scrollPoint = [gesture locationInView:_scrollView];
         _currentMovePointAtScrollView = scrollPoint;
-
+        
         double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
         _previousMovePointAtWindow = pointAtWindow;
         
@@ -504,8 +504,8 @@
                     [_contentCellArray insertObject:cell atIndex:targetIndex];
                     [self sortContentCellsWithAnimated:YES];
                     
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoardComponent:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
                     
                     _dragFromIndex = targetIndex;
@@ -523,23 +523,23 @@
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateEnd:(UILongPressGestureRecognizer *)gesture
 {
     __weak __typeof(self)weakSelf = self;
-
+    
     if (_isDrag) {
         self.isDrag = NO;
         
         if (_dragTargetCell) {
             NSInteger targetIndex = [self indexForCell:_dragTargetCell];
             if (_dragTargetCell.showDirectoryBorder) {
-                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:combineItemAtIndex:toIndex:)]) {
-                    [_dataSource springBoard:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:combineItemAtIndex:toIndex:)]) {
+                    [_dataSource springBoardComponent:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
                 }
                 
                 WBSpringBoardCell *combinedCell = nil;
                 if (_dataSource) {
-                    NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
+                    NSAssert([_dataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
                     
                     NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
-                    combinedCell = [_dataSource springBoard:weakSelf cellForItemAtIndex:combinedTargetIndex];
+                    combinedCell = [_dataSource springBoardComponent:weakSelf cellForItemAtIndex:combinedTargetIndex];
                 } else {
                     combinedCell = [[WBSpringBoardCombinedCell alloc] init];
                 }
@@ -554,11 +554,11 @@
                 
                 [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
                 [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-
+                
                 [self recomputePageAndSortContentCellsWithAnimated:YES];
             } else {
-                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                    [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
+                    [_dataSource springBoardComponent:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                 }
                 
                 [_contentCellArray removeObjectAtIndex:_dragFromIndex];
@@ -587,5 +587,6 @@
     }
     cell.hidden = NO;
 }
+
 
 @end
