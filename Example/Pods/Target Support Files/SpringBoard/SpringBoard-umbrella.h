@@ -5,7 +5,7 @@
 #import "WBIndexRect.h"
 #import "WBSpringBoard.h"
 #import "WBSpringBoardCell.h"
-#import "WBSpringBoardDirectoryCell.h"
+#import "WBSpringBoardCombinedCell.h"
 #import "WBSpringBoardLayout.h"
 #import "UIView+Layout.h"
 #import "WBSpringBoardDefines.h"

@@ -13,6 +13,6 @@
 #include "WBSpringBoardLayout.h"
 #include "WBSpringBoard.h"
 #include "WBSpringBoardCell.h"
-#include "WBSpringBoardDirectoryCell.h"
+#include "WBSpringBoardCombinedCell.h"
 
 #endif /* SpringBoard_h */

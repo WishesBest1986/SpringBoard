@@ -1,5 +1,5 @@
 //
-//  WBCustomerDirectoryCell.h
+//  WBCustomerCombinedCell.h
 //  SpringBoard
 //
 //  Created by LIJUN on 2017/3/10.
@@ -8,7 +8,7 @@
 
 #import <SpringBoard/SpringBoard.h>
 
-@interface WBCustomerDirectoryCell : WBSpringBoardDirectoryCell
+@interface WBCustomerCombinedCell : WBSpringBoardCombinedCell
 
 @property (nonatomic, readonly) UILabel *label;
 

@@ -1,14 +1,14 @@
 //
-//  WBSpringBoardDirectoryCell.m
+//  WBSpringBoardCombinedCell.m
 //  Pods
 //
-//  Created by LIJUN on 2017/3/9.
+//  Created by LIJUN on 2017/3/10.
 //
 //
 
-#import "WBSpringBoardDirectoryCell.h"
+#import "WBSpringBoardCombinedCell.h"
 
-@implementation WBSpringBoardDirectoryCell
+@implementation WBSpringBoardCombinedCell
 
 /*
 // Only override drawRect: if you perform custom drawing.

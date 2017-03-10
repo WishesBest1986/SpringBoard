@@ -10,7 +10,7 @@
 #import "WBSpringBoardDefines.h"
 #import "WBSpringBoardLayout.h"
 #import "WBSpringBoardCell.h"
-#import "WBSpringBoardDirectoryCell.h"
+#import "WBSpringBoardCombinedCell.h"
 #import "WBIndexRect.h"
 #import <Masonry/Masonry.h>
 
@@ -513,7 +513,7 @@
                     NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
                     combinedCell = [_dataSource springBoard:weakSelf cellForItemAtIndex:combinedTargetIndex];
                 } else {
-                    combinedCell = [[WBSpringBoardDirectoryCell alloc] init];
+                    combinedCell = [[WBSpringBoardCombinedCell alloc] init];
                 }
                 combinedCell.frame = CGRectFromString(_frameContainerArray[targetIndex]);
                 combinedCell.delegate = self;

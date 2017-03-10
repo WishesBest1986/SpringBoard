@@ -9,7 +9,7 @@
 #import "WBViewController.h"
 #import <SpringBoard/SpringBoard.h>
 #import "WBCustomerCell.h"
-#import "WBCustomerDirectoryCell.h"
+#import "WBCustomerCombinedCell.h"
 
 @interface WBViewController () <WBSpringBoardDelegate, WBSpringBoardDataSource>
 
@@ -64,11 +64,11 @@
         
         cell = customerCell;
     } else if ([data isKindOfClass:NSArray.class]) {
-        WBCustomerDirectoryCell *customerDirectoryCell = [[WBCustomerDirectoryCell alloc] init];
-        customerDirectoryCell.backgroundColor = [UIColor darkGrayColor];
-        customerDirectoryCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
+        WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
+        customerCombinedCell.backgroundColor = [UIColor darkGrayColor];
+        customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
         
-        cell = customerDirectoryCell;
+        cell = customerCombinedCell;
     }
     
     return cell;
