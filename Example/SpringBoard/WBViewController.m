@@ -9,6 +9,7 @@
 #import "WBViewController.h"
 #import <SpringBoard/SpringBoard.h>
 #import "WBCustomerCell.h"
+#import "WBCustomerDirectoryCell.h"
 
 @interface WBViewController () <WBSpringBoardDelegate, WBSpringBoardDataSource>
 
@@ -51,11 +52,24 @@
     return _dataArray.count;
 }
 
-- (WBCustomerCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
+- (WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
 {
-    WBCustomerCell *cell = [[WBCustomerCell alloc] init];
-    cell.backgroundColor = [UIColor lightGrayColor];
-    cell.label.text = _dataArray[index];
+    id data = _dataArray[index];
+    
+    WBSpringBoardCell *cell = nil;
+    if ([data isKindOfClass:NSString.class]) {
+        WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
+        customerCell.backgroundColor = [UIColor lightGrayColor];
+        customerCell.label.text = (NSString *)data;
+        
+        cell = customerCell;
+    } else if ([data isKindOfClass:NSArray.class]) {
+        WBCustomerDirectoryCell *customerDirectoryCell = [[WBCustomerDirectoryCell alloc] init];
+        customerDirectoryCell.backgroundColor = [UIColor darkGrayColor];
+        customerDirectoryCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
+        
+        cell = customerDirectoryCell;
+    }
     
     return cell;
 }
@@ -65,6 +79,24 @@
     NSString *data = _dataArray[sourceIndex];
     [_dataArray removeObjectAtIndex:sourceIndex];
     [_dataArray insertObject:data atIndex:destinationIndex];
+    
+    NSLog(@"%@", _dataArray);
+}
+
+- (void)springBoard:(WBSpringBoard *)springBoard combineItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
+{
+    NSString *sourceData = _dataArray[sourceIndex];
+    id destinationData = _dataArray[destinationIndex];
+    
+    NSMutableArray *combinedData = [@[sourceData] mutableCopy];
+    if ([destinationData isKindOfClass:[NSString class]]) {
+        [combinedData addObject:destinationData];
+    } else if ([destinationData isKindOfClass:[NSArray class]]) {
+        [combinedData addObjectsFromArray:destinationData];
+    }
+    
+    [_dataArray replaceObjectAtIndex:destinationIndex withObject:combinedData];
+    [_dataArray removeObjectAtIndex:sourceIndex];
     
     NSLog(@"%@", _dataArray);
 }

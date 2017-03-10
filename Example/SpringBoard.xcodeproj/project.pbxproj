@@ -18,6 +18,7 @@
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		F44FA7931E71009C00EBF807 /* WBCustomerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F44FA7921E71009C00EBF807 /* WBCustomerCell.m */; };
+		F44FA79B1E7248D100EBF807 /* WBCustomerDirectoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F44FA79A1E7248D100EBF807 /* WBCustomerDirectoryCell.m */; };
 		FDAAAE01C0B6571B95983E86 /* Pods_SpringBoard_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4593EA15126E63C3FB37967B /* Pods_SpringBoard_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,8 @@
 		DE65D1691E327E61DC4A74A7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		F44FA7911E71009C00EBF807 /* WBCustomerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCell.h; sourceTree = "<group>"; };
 		F44FA7921E71009C00EBF807 /* WBCustomerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCell.m; sourceTree = "<group>"; };
+		F44FA7991E7248D100EBF807 /* WBCustomerDirectoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerDirectoryCell.h; sourceTree = "<group>"; };
+		F44FA79A1E7248D100EBF807 /* WBCustomerDirectoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerDirectoryCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,8 @@
 				6003F594195388D20070C39A /* Supporting Files */,
 				F44FA7911E71009C00EBF807 /* WBCustomerCell.h */,
 				F44FA7921E71009C00EBF807 /* WBCustomerCell.m */,
+				F44FA7991E7248D100EBF807 /* WBCustomerDirectoryCell.h */,
+				F44FA79A1E7248D100EBF807 /* WBCustomerDirectoryCell.m */,
 			);
 			name = "Example for SpringBoard";
 			path = SpringBoard;
@@ -262,6 +267,7 @@
 				6003F5A7195388D20070C39A /* WBViewController.m in Sources */,
 				F44FA7931E71009C00EBF807 /* WBCustomerCell.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				F44FA79B1E7248D100EBF807 /* WBCustomerDirectoryCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

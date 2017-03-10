@@ -20,6 +20,8 @@
 @optional
 - (BOOL)springBoard:(WBSpringBoard *)springBoard canMoveItemAtIndex:(NSInteger)index;
 - (void)springBoard:(WBSpringBoard *)springBoard moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex;
+- (void)springBoard:(WBSpringBoard *)springBoard combineItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex;
+
 @end
 
 @protocol WBSpringBoardDelegate <NSObject>

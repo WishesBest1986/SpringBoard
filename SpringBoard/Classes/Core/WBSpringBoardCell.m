@@ -12,7 +12,7 @@
 
 @interface WBSpringBoardCell ()
 
-@property (nonatomic, weak) UIView *directoryView;
+@property (nonatomic, weak) UIView *directoryBorder;
 
 @end
 
@@ -29,18 +29,18 @@
         _longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
         [self addGestureRecognizer:_longGesture];
         
-        UIView *directoryView = [[UIView alloc] initWithFrame:CGRectZero];
-        directoryView.layer.borderColor = [UIColor blueColor].CGColor;
-        directoryView.layer.borderWidth = 0.5;
-        directoryView.layer.cornerRadius = 5;
-        directoryView.userInteractionEnabled = NO;
-        directoryView.hidden = YES;
-        [self addSubview:directoryView];
-        [directoryView mas_makeConstraints:^(MASConstraintMaker *make) {
+        UIView *directoryBorder = [[UIView alloc] initWithFrame:CGRectZero];
+        directoryBorder.layer.borderColor = [UIColor blueColor].CGColor;
+        directoryBorder.layer.borderWidth = 0.5;
+        directoryBorder.layer.cornerRadius = 5;
+        directoryBorder.userInteractionEnabled = NO;
+        directoryBorder.hidden = YES;
+        [self addSubview:directoryBorder];
+        [directoryBorder mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
         }];
         
-        _directoryView = directoryView;
+        _directoryBorder = directoryBorder;
     }
     return self;
 }
@@ -57,27 +57,27 @@
         rockAnimation.keyPath = @"transform.rotation";
         rockAnimation.values = @[@(AngleToRadian(-3)),@(AngleToRadian(3)),@(AngleToRadian(-3))];
         rockAnimation.repeatCount = MAXFLOAT;
-        rockAnimation.duration = 0.3;
+        rockAnimation.duration = kAnimationDuration;
         rockAnimation.removedOnCompletion = NO;
         [self.layer addAnimation:rockAnimation forKey:@"rocking"];
     }
 }
 
-- (void)setShowDirectoryView:(BOOL)showDirectoryView
+- (void)setShowDirectoryBorder:(BOOL)showDirectoryBorder
 {
-    if (_showDirectoryView != showDirectoryView) {
-        _showDirectoryView = showDirectoryView;
+    if (_showDirectoryBorder != showDirectoryBorder) {
+        _showDirectoryBorder = showDirectoryBorder;
         
-        if (showDirectoryView) {
-            _directoryView.hidden = NO;
+        if (showDirectoryBorder) {
+            _directoryBorder.hidden = NO;
             [UIView animateWithDuration:kAnimationSlowDuration animations:^{
-                _directoryView.layer.affineTransform = CGAffineTransformMakeScale(1.2, 1.2);
+                _directoryBorder.layer.affineTransform = CGAffineTransformMakeScale(1.2, 1.2);
             }];
         } else {
             [UIView animateWithDuration:kAnimationSlowDuration animations:^{
-                _directoryView.layer.affineTransform = CGAffineTransformIdentity;
+                _directoryBorder.layer.affineTransform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
-                _directoryView.hidden = YES;
+                _directoryBorder.hidden = YES;
             }];
         }
     }
