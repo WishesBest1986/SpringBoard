@@ -15,8 +15,6 @@
 @property (nonatomic, weak) UIView *inputView;
 @property (nonatomic, weak) UITextField *textField;
 
-@property (nonatomic, weak) UIView *springBoard;
-
 @end
 
 @implementation WBSpringBoardCombinedPopup

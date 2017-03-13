@@ -1,12 +1,13 @@
+
 //
-//  WBSpringBoardComponent.m
+//  WBSpringBoardCombination.m
 //  Pods
 //
-//  Created by LIJUN on 2017/3/10.
+//  Created by LIJUN on 2017/3/13.
 //
 //
 
-#import "WBSpringBoardComponent.h"
+#import "WBSpringBoardCombination.h"
 #import "WBSpringBoardDefines.h"
 #import "WBSpringBoardLayout.h"
 #import "WBSpringBoardCell.h"
@@ -15,7 +16,7 @@
 #import <Masonry/Masonry.h>
 #import "WBSpringBoardCombinedPopup.h"
 
-@interface WBSpringBoardComponent ( ) <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
+@interface WBSpringBoardCombination () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
@@ -43,22 +44,13 @@
 
 @end
 
-@implementation WBSpringBoardComponent
+@implementation WBSpringBoardCombination
 
 #define kDragScaleFactor 1.2
 #define kScrollViewDragBoundaryThreshold 30
 #define kFlipDetectTimeInterval 0.5
 
 #pragma mark - Init & Dealloc
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -99,7 +91,7 @@
     _scrollView = scrollView;
     
     UIPageControl *pageControl = [[UIPageControl alloc] init];
-    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    pageControl.pageIndicatorTintColor = [UIColor cyanColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
     pageControl.enabled = NO;
     pageControl.numberOfPages = 1;
@@ -138,8 +130,8 @@
     for (NSInteger i = 0; i < _numberOfItems; i ++) {
         WBSpringBoardCell *cell = nil;
         if (_dataSource) {
-            NSAssert([_dataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
-            cell = [_dataSource springBoardComponent:weakSelf cellForItemAtIndex:i];
+            NSAssert([_dataSource respondsToSelector:@selector(springBoardCombination:cellForItemAtIndex:)], @"@selector(springBoardCombination:cellForItemAtIndex:) must be implemented");
+            cell = [_dataSource springBoardCombination:weakSelf cellForItemAtIndex:i];
         } else {
             cell = [[WBSpringBoardCell alloc] init];
         }
@@ -160,7 +152,7 @@
     _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
     
     _pageControl.numberOfPages = _pages;
-    _pageControl.currentPage = MIN(_scrollView.contentOffset.x / _scrollView.bounds.size.width, _pages);
+    _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
 }
 
 - (void)computePages
@@ -266,8 +258,8 @@
     
     _numberOfItems = 0;
     if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoardComponent:weakSelf];
+        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardCombination:)], @"@selector(numberOfItemsInSpringBoardCombination:) must be implemented");
+        _numberOfItems = [_dataSource numberOfItemsInSpringBoardCombination:weakSelf];
     }
     
     [self computePages];
@@ -285,7 +277,7 @@
     _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
     
     _pageControl.numberOfPages = _pages;
-    _pageControl.currentPage = MIN(_scrollView.contentOffset.x / _scrollView.bounds.size.width, _pages);
+    _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
     
     [self sortContentCellsWithAnimated:animated];
 }
@@ -349,6 +341,15 @@
     }];
 }
 
+- (BOOL)combinableWithDragedCell:(WBSpringBoardCell *)dragedCell
+{
+    if ([dragedCell isKindOfClass:[WBSpringBoardCombinedCell class]]) {
+        return _allowCombination && _allowOverlapCombination;
+    } else {
+        return _allowCombination;
+    }
+}
+
 #pragma mark - Setter & Getter
 
 - (void)setLayout:(WBSpringBoardLayout *)layout
@@ -397,8 +398,8 @@
     
     _numberOfItems = 0;
     if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoardComponent:weakSelf];
+        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoardCombination:)], @"@selector(numberOfItemsInSpringBoardCombination:) must be implemented");
+        _numberOfItems = [_dataSource numberOfItemsInSpringBoardCombination:weakSelf];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -421,9 +422,9 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionHorizontal) {
-        _pageControl.currentPage = scrollView.contentOffset.x / scrollView.bounds.size.width;
+        _pageControl.currentPage = round(scrollView.contentOffset.x / scrollView.bounds.size.width);
     } else if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
-        _pageControl.currentPage = scrollView.contentOffset.y / scrollView.bounds.size.height;
+        _pageControl.currentPage = round(scrollView.contentOffset.y / scrollView.bounds.size.height);
     }
 }
 
@@ -494,18 +495,32 @@
             }
             
             _dragTargetCell = _contentCellArray[targetIndex];
-            if (targetInnerRect) {
-                _dragTargetCell.showDirectoryBorder = YES;
+            if ([self combinableWithDragedCell:cell]) {
+                if (targetInnerRect) {
+                    _dragTargetCell.showDirectoryBorder = YES;
+                } else {
+                    _dragTargetCell.showDirectoryBorder = NO;
+                    
+                    if (fingerSpeed < 2) {
+                        [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                        [_contentCellArray insertObject:cell atIndex:targetIndex];
+                        [self sortContentCellsWithAnimated:YES];
+                        
+                        if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardCombination:moveItemAtIndex:toIndex:)]) {
+                            [_dataSource springBoardCombination:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                        }
+                        
+                        _dragFromIndex = targetIndex;
+                    }
+                }
             } else {
-                _dragTargetCell.showDirectoryBorder = NO;
-                
                 if (fingerSpeed < 2) {
                     [_contentCellArray removeObjectAtIndex:_dragFromIndex];
                     [_contentCellArray insertObject:cell atIndex:targetIndex];
                     [self sortContentCellsWithAnimated:YES];
                     
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoardComponent:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardCombination:moveItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoardCombination:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
                     
                     _dragFromIndex = targetIndex;
@@ -526,46 +541,47 @@
     
     if (_isDrag) {
         self.isDrag = NO;
-        
-        if (_dragTargetCell) {
-            NSInteger targetIndex = [self indexForCell:_dragTargetCell];
-            if (_dragTargetCell.showDirectoryBorder) {
-                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:combineItemAtIndex:toIndex:)]) {
-                    [_dataSource springBoardComponent:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                }
-                
-                WBSpringBoardCell *combinedCell = nil;
-                if (_dataSource) {
-                    NSAssert([_dataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
+        if ([self combinableWithDragedCell:cell]) {
+            if (_dragTargetCell) {
+                NSInteger targetIndex = [self indexForCell:_dragTargetCell];
+                if (_dragTargetCell.showDirectoryBorder) {
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardCombination:combineItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoardCombination:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    }
                     
-                    NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
-                    combinedCell = [_dataSource springBoardComponent:weakSelf cellForItemAtIndex:combinedTargetIndex];
+                    WBSpringBoardCell *combinedCell = nil;
+                    if (_dataSource) {
+                        NSAssert([_dataSource respondsToSelector:@selector(springBoardCombination:cellForItemAtIndex:)], @"@selector(springBoardCombination:cellForItemAtIndex:) must be implemented");
+                        
+                        NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
+                        combinedCell = [_dataSource springBoardCombination:weakSelf cellForItemAtIndex:combinedTargetIndex];
+                    } else {
+                        combinedCell = [[WBSpringBoardCombinedCell alloc] init];
+                    }
+                    combinedCell.frame = CGRectFromString(_frameContainerArray[targetIndex]);
+                    combinedCell.delegate = self;
+                    combinedCell.longGestureDelegate = self;
+                    combinedCell.isEdit = YES;
+                    
+                    [cell removeFromSuperview];
+                    [_dragTargetCell removeFromSuperview];
+                    [_scrollView addSubview:combinedCell];
+                    
+                    [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
+                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                    
+                    [self recomputePageAndSortContentCellsWithAnimated:YES];
                 } else {
-                    combinedCell = [[WBSpringBoardCombinedCell alloc] init];
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardCombination:moveItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoardCombination:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    }
+                    
+                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                    [_contentCellArray insertObject:cell atIndex:targetIndex];
+                    [self sortContentCellsWithAnimated:YES];
+                    
+                    _dragFromIndex = targetIndex;
                 }
-                combinedCell.frame = CGRectFromString(_frameContainerArray[targetIndex]);
-                combinedCell.delegate = self;
-                combinedCell.longGestureDelegate = self;
-                combinedCell.isEdit = YES;
-                
-                [cell removeFromSuperview];
-                [_dragTargetCell removeFromSuperview];
-                [_scrollView addSubview:combinedCell];
-                
-                [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
-                [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                
-                [self recomputePageAndSortContentCellsWithAnimated:YES];
-            } else {
-                if (_dataSource && [_dataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
-                    [_dataSource springBoardComponent:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                }
-                
-                [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                [_contentCellArray insertObject:cell atIndex:targetIndex];
-                [self sortContentCellsWithAnimated:YES];
-                
-                _dragFromIndex = targetIndex;
             }
         }
         
@@ -588,5 +604,5 @@
     cell.hidden = NO;
 }
 
-
 @end
+

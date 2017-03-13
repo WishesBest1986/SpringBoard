@@ -10,6 +10,8 @@
 
 @interface WBSpringBoardCombinedPopup : UIControl
 
+@property (nonatomic, readonly) UIView *springBoard;
+
 - (void)hideWithAnimated:(BOOL)animated removeFromSuperView:(BOOL)remove;
 
 @end
