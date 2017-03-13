@@ -16,7 +16,7 @@
 #import "WBSpringBoardCombinedPopup.h"
 #import "WBSpringBoardCombination.h"
 
-@interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate, WBSpringBoardCombinationDelegate, WBSpringBoardCombinationDataSource>
+@interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate, WBSpringBoardCombinationDelegate, WBSpringBoardCombinationDataSource, WBSpringBoardCombinationOutsideGestureDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIPageControl *pageControl;
@@ -336,10 +336,12 @@
     combination.superIndex = index;
     combination.delegate = self;
     combination.dataSource = self;
+    combination.outsideGestureDelegate = self;
     combination.layout = _popupLayout;
     
     WBSpringBoardCombinedPopup *popupView = [[WBSpringBoardCombinedPopup alloc] init];
     [popupView.springBoard addSubview:combination];
+    combination.popupView = popupView;
     [combination mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(combination.superview);
     }];
@@ -646,5 +648,159 @@
     return [_dataSource springBoard:weakSelf moveSubItemAtIndex:sourceIndex toSubIndex:destinationIndex withSuperIndex:superIndex];
 }
 
+#pragma mark - WBSpringBoardCombinationOutsideGestureDelegate Method
+
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureBegin:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
+{
+    __weak __typeof(self)weakSelf = self;
+
+    _isDrag = YES;
+    _dragFromIndex = 0;
+    
+    [_dataSource springBoard:weakSelf moveSubItemAtIndex:[springBoardCombination indexForCell:cell] toSuperIndex:0 withSuperIndex:springBoardCombination.superIndex];
+    
+    [_scrollView addSubview:cell];
+    [_contentCellArray insertObject:cell atIndex:0];
+    
+    [self recomputePageAndSortContentCellsWithAnimated:YES];
+}
+
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureMove:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
+{
+    __weak __typeof(self)weakSelf = self;
+    
+    CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
+    if (_isDrag) {
+        CGPoint scrollPoint = [gesture locationInView:_scrollView];
+        _currentMovePointAtScrollView = scrollPoint;
+        
+        double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
+        _previousMovePointAtWindow = pointAtWindow;
+        
+        NSDictionary *targetInfo = [self targetInfoWithPoint:scrollPoint];
+        NSInteger targetIndex = [targetInfo[@"targetIndex"] integerValue];
+        BOOL targetInnerRect = [targetInfo[@"innerRect"] boolValue];
+        
+        if (targetIndex != -1 && targetIndex != _dragFromIndex) {
+            // reset last step showDirectoryView targetCell
+            if (_dragTargetCell && _dragTargetCell != _contentCellArray[targetIndex]) {
+                _dragTargetCell.showDirectoryBorder = NO;
+            }
+            
+            _dragTargetCell = _contentCellArray[targetIndex];
+            if ([self combinableWithDragedCell:cell]) {
+                if (targetInnerRect) {
+                    _dragTargetCell.showDirectoryBorder = YES;
+                } else {
+                    _dragTargetCell.showDirectoryBorder = NO;
+                    
+                    if (fingerSpeed < 2) {
+                        [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                        [_contentCellArray insertObject:cell atIndex:targetIndex];
+                        [self sortContentCellsWithAnimated:YES];
+                        
+                        if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
+                            [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                        }
+                        
+                        _dragFromIndex = targetIndex;
+                    }
+                }
+            } else {
+                if (fingerSpeed < 2) {
+                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                    [_contentCellArray insertObject:cell atIndex:targetIndex];
+                    [self sortContentCellsWithAnimated:YES];
+                    
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    }
+                    
+                    _dragFromIndex = targetIndex;
+                }
+            }
+        } else {
+            if (_dragTargetCell) {
+                _dragTargetCell.showDirectoryBorder = NO;
+                _dragTargetCell = nil;
+            }
+        }
+    }
+}
+
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureEnd:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
+{
+    __weak __typeof(self)weakSelf = self;
+    
+    if (_isDrag) {
+        self.isDrag = NO;
+        if ([self combinableWithDragedCell:cell]) {
+            if (_dragTargetCell) {
+                NSInteger targetIndex = [self indexForCell:_dragTargetCell];
+                if (_dragTargetCell.showDirectoryBorder) {
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:combineItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoard:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    }
+                    
+                    WBSpringBoardCell *combinedCell = nil;
+                    if (_dataSource) {
+                        NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
+                        
+                        NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
+                        combinedCell = [_dataSource springBoard:weakSelf cellForItemAtIndex:combinedTargetIndex];
+                    } else {
+                        combinedCell = [[WBSpringBoardCombinedCell alloc] init];
+                    }
+                    combinedCell.frame = CGRectFromString(_frameContainerArray[targetIndex]);
+                    combinedCell.delegate = self;
+                    combinedCell.longGestureDelegate = self;
+                    combinedCell.isEdit = YES;
+                    
+                    [cell removeFromSuperview];
+                    [_dragTargetCell removeFromSuperview];
+                    [_scrollView addSubview:combinedCell];
+                    
+                    [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
+                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                    
+                    [self recomputePageAndSortContentCellsWithAnimated:YES];
+                } else {
+                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
+                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    }
+                    
+                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
+                    [_contentCellArray insertObject:cell atIndex:targetIndex];
+                    [self sortContentCellsWithAnimated:YES];
+                    
+                    _dragFromIndex = targetIndex;
+                }
+            }
+        }
+        
+        _dragTargetCell.showDirectoryBorder = NO;
+        [_dragView removeFromSuperview];
+        _dragView = nil;
+    }
+    cell.hidden = NO;
+    
+    cell.delegate = self;
+    cell.longGestureDelegate = self;
+}
+
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureCancel:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
+{
+    if (_isDrag) {
+        self.isDrag = NO;
+        
+        _dragTargetCell.showDirectoryBorder = NO;
+        [_dragView removeFromSuperview];
+        _dragView = nil;
+    }
+    cell.hidden = NO;
+    
+    cell.delegate = self;
+    cell.longGestureDelegate = self;
+}
 
 @end

@@ -164,7 +164,14 @@
 
 - (void)springBoard:(WBSpringBoard *)springBoard moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
 {
+    NSMutableArray *superDataArray = _dataArray[superIndex];
+    NSString *subData = superDataArray[sourceIndex];
+    [superDataArray removeObjectAtIndex:sourceIndex];
+
+    _dataArray[superIndex] = superDataArray;
+    [_dataArray insertObject:subData atIndex:0];
     
+    NSLog(@"%@", _dataArray);
 }
 
 @end

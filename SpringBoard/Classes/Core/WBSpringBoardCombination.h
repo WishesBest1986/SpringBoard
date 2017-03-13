@@ -30,10 +30,20 @@
 
 @end
 
+@protocol WBSpringBoardCombinationOutsideGestureDelegate <NSObject>
+
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureBegin:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell;
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureMove:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell;
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureEnd:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell;
+- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureCancel:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell;
+
+@end
+
 @interface WBSpringBoardCombination : UIView
 
 @property (nonatomic, weak) id<WBSpringBoardCombinationDelegate> delegate;
 @property (nonatomic, weak) id<WBSpringBoardCombinationDataSource> dataSource;
+@property (nonatomic, weak) id<WBSpringBoardCombinationOutsideGestureDelegate> outsideGestureDelegate;
 
 @property (nonatomic, strong) WBSpringBoardLayout *layout;
 
@@ -42,7 +52,9 @@
 @property (nonatomic, assign) BOOL allowOverlapCombination;
 
 @property (nonatomic, assign) NSInteger superIndex;
+@property (nonatomic, weak) UIView *popupView;
 
 - (void)reloadData;
+- (NSInteger)indexForCell:(WBSpringBoardCell *)cell;
 
 @end
