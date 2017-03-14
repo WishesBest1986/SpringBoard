@@ -10,6 +10,7 @@
 #import "WBSpringBoardPopupView.h"
 
 @class WBSpringBoardInnerView;
+@class WBSpringBoardCombinedCell;
 
 @protocol WBSpringBoardInnerViewOutsideGestureDelegate <NSObject>
 
@@ -23,6 +24,8 @@
 @interface WBSpringBoardInnerView : WBSpringBoardComponent
 
 @property (nonatomic, assign) NSInteger superIndex;
+@property (nonatomic, weak) WBSpringBoardCombinedCell *superCell;
+
 @property (nonatomic, weak) id<WBSpringBoardInnerViewOutsideGestureDelegate> springBoardInnerViewOutsideGestureDelegate;
 @property (nonatomic, weak) WBSpringBoardPopupView *popupView;
 

@@ -42,9 +42,8 @@
     _springBoardView.springBoardDataSource = self;
     _springBoardView.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
     _springBoardView.layout.minimumHorizontalSpace = 5;
-    _springBoardView.allowCombination = YES;
-    _springBoardView.allowOverlapCombination = NO;
-    
+    _springBoardView.allowSingleItemCombinedCell = NO;
+        
     _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 5, 5);
     _springBoardView.innerViewLayout.minimumHorizontalSpace = 5;
 }
@@ -179,7 +178,14 @@
     [superDataArray removeObjectAtIndex:sourceIndex];
 
     _dataArray[superIndex] = superDataArray;
-    [_dataArray insertObject:subData atIndex:0];
+    [_dataArray insertObject:subData atIndex:destinationIndex];
+    
+    NSLog(@"%@", _dataArray);
+}
+
+- (void)springBoardView:(WBSpringBoardView *)springBoardView removeItemAtIndex:(NSInteger)index
+{
+    [_dataArray removeObjectAtIndex:index];
     
     NSLog(@"%@", _dataArray);
 }

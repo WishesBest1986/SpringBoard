@@ -32,6 +32,10 @@
 {
     [super commonInit];
     
+    self.allowCombination = YES;
+    self.allowOverlapCombination = NO;
+    self.allowSingleItemCombinedCell = YES;
+
     self.springBoardComponentDelegate = self;
     self.springBoardComponentDataSource = self;
     
@@ -46,7 +50,7 @@
 - (void)clickSpringBoardCell:(WBSpringBoardCell *)cell
 {
     if ([cell isKindOfClass:WBSpringBoardCombinedCell.class]) {
-        [self showCombinedCellsForCell:cell];
+        [self showCombinedCellsForCell:((WBSpringBoardCombinedCell *)cell)];
     } else {
         [super clickSpringBoardCell:cell];
     }
@@ -61,17 +65,16 @@
     [self reloadData];
 }
 
-#pragma mark - Public Method
-
 #pragma mark - Private Method
 
-- (void)showCombinedCellsForCell:(WBSpringBoardCell *)cell
+- (void)showCombinedCellsForCell:(WBSpringBoardCombinedCell *)cell
 {
     @WBWeakObj(self);
     NSInteger index = [self indexForCell:cell];
     
     WBSpringBoardInnerView *innerView = [[WBSpringBoardInnerView alloc] init];
     innerView.superIndex = index;
+    innerView.superCell = cell;
     innerView.springBoardComponentDelegate = self;
     innerView.springBoardComponentDataSource = self;
     innerView.springBoardInnerViewOutsideGestureDelegate = self;
@@ -100,6 +103,51 @@
 {
     BOOL edit = [notification.object boolValue];
     self.isEdit = edit;
+}
+
+- (void)verifyNecessityOfCombinedCell:(WBSpringBoardCombinedCell *)combinedCell
+{
+    @WBWeakObj(self);
+    NSInteger superIndex = [self indexForCell:combinedCell];
+    
+    NSInteger numberOfItems = 0;
+    if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:numberOfSubItemsAtIndex:)]) {
+        numberOfItems = [_springBoardDataSource springBoardView:weakself numberOfSubItemsAtIndex:superIndex];
+    }
+    
+    if (numberOfItems <= 0) {
+        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:removeItemAtIndex:)]) {
+            [_springBoardDataSource springBoardView:weakself removeItemAtIndex:superIndex];
+        }
+        
+        [combinedCell removeFromSuperview];
+        [self.contentCellArray removeObjectAtIndex:superIndex];
+        [self recomputePageAndSortContentCellsWithAnimated:YES];
+    }
+    
+    if (numberOfItems == 1 && !_allowSingleItemCombinedCell) {
+        WBSpringBoardCell *cell = [[WBSpringBoardCell alloc] init];
+        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:subCellForItemAtIndex:withSuperIndex:)]) {
+            cell = [_springBoardDataSource springBoardView:weakself subCellForItemAtIndex:0 withSuperIndex:superIndex];
+        }
+        
+        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:moveSubItemAtIndex:toSubIndex:withSuperIndex:)]) {
+            [_springBoardDataSource springBoardView:weakself moveSubItemAtIndex:0 toSuperIndex:superIndex withSuperIndex:superIndex];
+        }
+        
+        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:removeItemAtIndex:)]) {
+            [_springBoardDataSource springBoardView:weakself removeItemAtIndex:(superIndex + 1)];
+        }
+        
+        cell.frame = combinedCell.frame;
+        [combinedCell removeFromSuperview];
+        [self.scrollView addSubview:cell];
+        [self.contentCellArray replaceObjectAtIndex:superIndex withObject:cell];
+        cell.delegate = self;
+        cell.longGestureDelegate = self;
+        
+        [self recomputePageAndSortContentCellsWithAnimated:YES];
+    }
 }
 
 #pragma mark - WBSpringBoardComponentDelegate Method
@@ -200,6 +248,7 @@
     
     cell.delegate = self;
     cell.longGestureDelegate = self;
+    [self verifyNecessityOfCombinedCell:springBoardInnerView.superCell];
 }
 
 - (void)springBoardInnerView:(WBSpringBoardInnerView *)springBoardInnerView outsideGestureCancel:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
@@ -208,6 +257,7 @@
     
     cell.delegate = self;
     cell.longGestureDelegate = self;
+    [self verifyNecessityOfCombinedCell:springBoardInnerView.superCell];
 }
 
 @end

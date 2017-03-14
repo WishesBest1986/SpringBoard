@@ -27,6 +27,7 @@
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSubIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex;
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex;
+- (void)springBoardView:(WBSpringBoardView *)springBoardView removeItemAtIndex:(NSInteger)index;
 
 @end
 
@@ -45,5 +46,7 @@
 @property (nonatomic, weak) id<WBSpringBoardViewDataSource> springBoardDataSource;
 
 @property (nonatomic, strong) WBSpringBoardLayout *innerViewLayout;
+
+@property (nonatomic, assign) BOOL allowSingleItemCombinedCell; // default YES
 
 @end
