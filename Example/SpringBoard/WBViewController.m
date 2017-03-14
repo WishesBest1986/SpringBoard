@@ -190,4 +190,11 @@
     NSLog(@"%@", _dataArray);
 }
 
+- (void)springBoardView:(WBSpringBoardView *)springBoardView needRefreshCombinedCell:(WBCustomerCombinedCell *)combinedCell
+{
+    NSInteger index = [springBoardView indexForCell:combinedCell];
+    NSArray *data = _dataArray[index];
+    combinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
+}
+
 @end

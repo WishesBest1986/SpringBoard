@@ -11,6 +11,7 @@
 @class WBSpringBoardView;
 @class WBSpringBoardLayout;
 @class WBSpringBoardCell;
+@class WBSpringBoardCombinedCell;
 
 @protocol WBSpringBoardViewDataSource <NSObject>
 @required
@@ -28,6 +29,8 @@
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSubIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex;
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex;
 - (void)springBoardView:(WBSpringBoardView *)springBoardView removeItemAtIndex:(NSInteger)index;
+
+- (void)springBoardView:(WBSpringBoardView *)springBoardView needRefreshCombinedCell:(__kindof WBSpringBoardCombinedCell *)combinedCell;
 
 @end
 

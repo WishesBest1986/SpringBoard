@@ -167,6 +167,7 @@
     @WBWeakObj(self);
     if ([springBoardComponent isKindOfClass:WBSpringBoardView.class]) {
         if (_springBoardDataSource) {
+            NSAssert([_springBoardDataSource respondsToSelector:@selector(numberOfItemsInSpringBoardView:)], @"@selector(numberOfItemsInSpringBoardView:) must be implemented");
             return [_springBoardDataSource numberOfItemsInSpringBoardView:weakself];
         }
     } else if ([springBoardComponent isKindOfClass:WBSpringBoardInnerView.class]) {
@@ -182,7 +183,8 @@
 {
     @WBWeakObj(self);
     if ([springBoardComponent isKindOfClass:WBSpringBoardView.class]) {
-        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:cellForItemAtIndex:)]) {
+        if (_springBoardDataSource) {
+            NSAssert([_springBoardDataSource respondsToSelector:@selector(springBoardView:cellForItemAtIndex:)], @"@selector(springBoardView:cellForItemAtIndex:) must be implemented");
             return [_springBoardDataSource springBoardView:weakself cellForItemAtIndex:index];
         }
     } else if ([springBoardComponent isKindOfClass:WBSpringBoardInnerView.class]) {
@@ -202,9 +204,14 @@
             [_springBoardDataSource springBoardView:weakself moveItemAtIndex:sourceIndex toIndex:destinationIndex];
         }
     } else if ([springBoardComponent isKindOfClass:WBSpringBoardInnerView.class]) {
+        WBSpringBoardInnerView *innerView = (WBSpringBoardInnerView *)springBoardComponent;
         if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:moveSubItemAtIndex:toSubIndex:withSuperIndex:)]) {
-            NSInteger superIndex = ((WBSpringBoardInnerView *)springBoardComponent).superIndex;
+            NSInteger superIndex = innerView.superIndex;
             [_springBoardDataSource springBoardView:weakself moveSubItemAtIndex:sourceIndex toSubIndex:destinationIndex withSuperIndex:superIndex];
+        }
+        
+        if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:needRefreshCombinedCell:)]) {
+            [_springBoardDataSource springBoardView:weakself needRefreshCombinedCell:innerView.superCell];
         }
     }
 }
@@ -233,6 +240,10 @@
     
     [self.scrollView addSubview:cell];
     [self.contentCellArray insertObject:cell atIndex:0];
+    
+    if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:needRefreshCombinedCell:)]) {
+        [_springBoardDataSource springBoardView:weakself needRefreshCombinedCell:springBoardInnerView.superCell];
+    }
     
     [self recomputePageAndSortContentCellsWithAnimated:YES];
 }
