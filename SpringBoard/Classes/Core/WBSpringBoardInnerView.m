@@ -19,6 +19,13 @@
 
 #pragma mark - Override Method
 
+- (void)setIsEdit:(BOOL)isEdit
+{
+    [super setIsEdit:isEdit];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyInnerViewEditChanged object:@(isEdit)];
+}
+
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateMove:(UILongPressGestureRecognizer *)gesture
 {
     @WBWeakObj(self);

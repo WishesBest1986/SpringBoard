@@ -17,6 +17,15 @@
 
 @implementation WBSpringBoardView
 
+#pragma mark - Init & Dealloc
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kNotificationKeyInnerViewEditChanged
+                                                  object:nil];
+}
+
 #pragma mark - Override Method
 
 - (void)commonInit
@@ -27,6 +36,11 @@
     self.springBoardComponentDataSource = self;
     
     self.innerViewLayout = [[WBSpringBoardLayout alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(innerViewEditChangedNotification:)
+                                                 name:kNotificationKeyInnerViewEditChanged
+                                               object:nil];
 }
 
 - (void)clickSpringBoardCell:(WBSpringBoardCell *)cell
@@ -80,6 +94,12 @@
     } completion:^(BOOL finished) {
         innerView.isEdit = weakself.isEdit;
     }];
+}
+
+- (void)innerViewEditChangedNotification:(NSNotification *)notification
+{
+    BOOL edit = [notification.object boolValue];
+    self.isEdit = edit;
 }
 
 #pragma mark - WBSpringBoardComponentDelegate Method
