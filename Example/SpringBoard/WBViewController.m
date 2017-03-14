@@ -58,12 +58,15 @@
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView clickItemAtIndex:(NSInteger)index
 {
-    
+    NSString *data = _dataArray[index];
+    NSLog(@"clicked data %@", data);
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView clickSubItemAtIndex:(NSInteger)index withSuperIndex:(NSInteger)superIndex
 {
-    
+    NSArray *superData = _dataArray[superIndex];
+    NSString *data = superData[index];
+    NSLog(@"clicked data %@", data);
 }
 
 #pragma mark - WBSpringBoardViewDataSource Method

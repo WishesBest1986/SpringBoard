@@ -155,8 +155,15 @@
 - (void)springBoardComponent:(WBSpringBoardComponent *)springBoardComponent clickItemAtIndex:(NSInteger)index
 {
     @WBWeakObj(self);
-    if (_springBoardDelegate && [_springBoardDelegate respondsToSelector:@selector(springBoardView:clickItemAtIndex:)]) {
-        [_springBoardDelegate springBoardView:weakself clickItemAtIndex:index];
+    if ([springBoardComponent isKindOfClass:WBSpringBoardView.class]) {
+        if (_springBoardDelegate && [_springBoardDelegate respondsToSelector:@selector(springBoardView:clickItemAtIndex:)]) {
+            [_springBoardDelegate springBoardView:weakself clickItemAtIndex:index];
+        }
+    } else if ([springBoardComponent isKindOfClass:WBSpringBoardInnerView.class]) {
+        if (_springBoardDelegate && [_springBoardDelegate respondsToSelector:@selector(springBoardView:clickSubItemAtIndex:withSuperIndex:)]) {
+            NSInteger superIndex = ((WBSpringBoardInnerView *)springBoardComponent).superIndex;
+            [_springBoardDelegate springBoardView:weakself clickSubItemAtIndex:index withSuperIndex:superIndex];
+        }
     }
 }
 

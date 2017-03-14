@@ -383,8 +383,16 @@
 
 - (void)clickSpringBoardCell:(WBSpringBoardCell *)cell
 {
+    @WBWeakObj(self);
     if (self.isEdit) {
         self.isEdit = NO;
+    }
+    
+    if (!_isEdit) {
+        NSInteger index = [self indexForCell:cell];
+        if (_springBoardComponentDelegate && [_springBoardComponentDelegate respondsToSelector:@selector(springBoardComponent:clickItemAtIndex:)]) {
+            [_springBoardComponentDelegate springBoardComponent:weakself clickItemAtIndex:index];
+        }
     }
 }
 
