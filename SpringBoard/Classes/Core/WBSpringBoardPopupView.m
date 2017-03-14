@@ -1,23 +1,23 @@
 //
-//  WBSpringBoardCombinedPopup.m
+//  WBSpringBoardPopupView.m
 //  Pods
 //
-//  Created by LIJUN on 2017/3/10.
+//  Created by LIJUN on 2017/3/14.
 //
 //
 
-#import "WBSpringBoardCombinedPopup.h"
+#import "WBSpringBoardPopupView.h"
 #import "WBSpringBoardDefines.h"
 #import <Masonry/Masonry.h>
 
-@interface WBSpringBoardCombinedPopup ( ) <UITextFieldDelegate>
+@interface WBSpringBoardPopupView ( ) <UITextFieldDelegate>
 
 @property (nonatomic, weak) UIView *inputView;
 @property (nonatomic, weak) UITextField *textField;
 
 @end
 
-@implementation WBSpringBoardCombinedPopup
+@implementation WBSpringBoardPopupView
 
 - (instancetype)init
 {
@@ -51,12 +51,14 @@
         }];
         
         
-        UIView *springBoard = [[UIView alloc] init];
-        springBoard.backgroundColor = [UIColor whiteColor];
-        springBoard.layer.cornerRadius = 10;
-        [self addSubview:springBoard];
-        _springBoard = springBoard;
-        [springBoard mas_makeConstraints:^(MASConstraintMaker *make) {
+        UIView *contentView = [[UIView alloc] init];
+        contentView.backgroundColor = [UIColor whiteColor];
+        contentView.layer.cornerRadius = 10;
+        [self addSubview:contentView];
+        _contentView = contentView;
+        @WBWeakObj(self);
+        [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+            @WBStrongObj(self);
             make.top.mas_equalTo(inputView.mas_bottom);
             make.centerX.mas_equalTo(self);
             make.width.mas_equalTo(self).multipliedBy(0.8);

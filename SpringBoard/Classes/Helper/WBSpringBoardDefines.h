@@ -15,6 +15,9 @@
 
 #define AngleToRadian(x) ((x) / 180.0 * M_PI)
 
+#define WBWeakObj(o) autoreleasepool{} __weak typeof(o) weak##o = o;
+#define WBStrongObj(o) autoreleasepool{} __strong typeof(o) o = weak##o;
+
 // DEFINE DEFAULT VALUES
 #define kItemSizeDefault CGSizeMake(100, 100)
 #define kEdgeInsetsDefault UIEdgeInsetsZero;

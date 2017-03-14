@@ -11,7 +11,7 @@
 
 #include "WBSpringBoardDefines.h"
 #include "WBSpringBoardLayout.h"
-#include "WBSpringBoard.h"
+#include "WBSpringBoardView.h"
 #include "WBSpringBoardCell.h"
 #include "WBSpringBoardCombinedCell.h"
 

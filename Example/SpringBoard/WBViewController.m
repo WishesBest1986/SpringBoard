@@ -11,9 +11,9 @@
 #import "WBCustomerCell.h"
 #import "WBCustomerCombinedCell.h"
 
-@interface WBViewController () <WBSpringBoardDelegate, WBSpringBoardDataSource>
+@interface WBViewController () <WBSpringBoardViewDelegate, WBSpringBoardViewDataSource>
 
-@property (weak, nonatomic) IBOutlet WBSpringBoard *springBoard;
+@property (weak, nonatomic) IBOutlet WBSpringBoardView *springBoardView;
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
@@ -38,15 +38,15 @@
         [_dataArray addObject:[NSString stringWithFormat:@"%d", i]];
     }
     
-    _springBoard.delegate = self;
-    _springBoard.dataSource = self;
-    _springBoard.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
-    _springBoard.layout.minimumHorizontalSpace = 5;
-    _springBoard.allowCombination = YES;
-    _springBoard.allowOverlapCombination = NO;
+    _springBoardView.springBoardDelegate = self;
+    _springBoardView.springBoardDataSource = self;
+    _springBoardView.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
+    _springBoardView.layout.minimumHorizontalSpace = 5;
+    _springBoardView.allowCombination = YES;
+    _springBoardView.allowOverlapCombination = NO;
     
-    _springBoard.popupLayout.insets = UIEdgeInsetsMake(5, 5, 5, 5);
-    _springBoard.popupLayout.minimumHorizontalSpace = 5;
+    _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 5, 5);
+    _springBoardView.innerViewLayout.minimumHorizontalSpace = 5;
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,16 +55,26 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - WBSpringBoardDelegate Method
+#pragma mark - WBSpringBoardViewDelegate Method
 
-#pragma mark - WBSpringBoardDataSource Method
+- (void)springBoardView:(WBSpringBoardView *)springBoardView clickItemAtIndex:(NSInteger)index
+{
+    
+}
 
-- (NSInteger)numberOfItemsInSpringBoard:(WBSpringBoard *)springBoard
+- (void)springBoardView:(WBSpringBoardView *)springBoardView clickSubItemAtIndex:(NSInteger)index withSuperIndex:(NSInteger)superIndex
+{
+    
+}
+
+#pragma mark - WBSpringBoardViewDataSource Method
+
+- (NSInteger)numberOfItemsInSpringBoardView:(WBSpringBoardView *)springBoardView
 {
     return _dataArray.count;
 }
 
-- (WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard cellForItemAtIndex:(NSInteger)index
+- (WBSpringBoardCell *)springBoardView:(WBSpringBoardView *)springBoardView cellForItemAtIndex:(NSInteger)index
 {
     id data = _dataArray[index];
     
@@ -86,7 +96,7 @@
     return cell;
 }
 
-- (NSInteger)springBoard:(WBSpringBoard *)springBoard numberOfSubItemsAtIndex:(NSInteger)index
+- (NSInteger)springBoardView:(WBSpringBoardView *)springBoardView numberOfSubItemsAtIndex:(NSInteger)index
 {
     id superData = _dataArray[index];
     if ([superData isKindOfClass:NSArray.class]) {
@@ -95,7 +105,7 @@
     return 0;
 }
 
-- (WBSpringBoardCell *)springBoard:(WBSpringBoard *)springBoard subCellForItemAtIndex:(NSInteger)index withSuperIndex:(NSInteger)superIndex;
+- (WBSpringBoardCell *)springBoardView:(WBSpringBoardView *)springBoard subCellForItemAtIndex:(NSInteger)index withSuperIndex:(NSInteger)superIndex
 {
     WBSpringBoardCell *cell = nil;
 
@@ -122,7 +132,7 @@
     return cell;
 }
 
-- (void)springBoard:(WBSpringBoard *)springBoard moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
+- (void)springBoardView:(WBSpringBoardView *)springBoardView moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
 {
     NSString *data = _dataArray[sourceIndex];
     [_dataArray removeObjectAtIndex:sourceIndex];
@@ -131,7 +141,7 @@
     NSLog(@"%@", _dataArray);
 }
 
-- (void)springBoard:(WBSpringBoard *)springBoard combineItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
+- (void)springBoardView:(WBSpringBoardView *)springBoardView combineItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
 {
     NSString *sourceData = _dataArray[sourceIndex];
     id destinationData = _dataArray[destinationIndex];
@@ -149,7 +159,7 @@
     NSLog(@"%@", _dataArray);
 }
 
-- (void)springBoard:(WBSpringBoard *)springBoard moveSubItemAtIndex:(NSInteger)sourceIndex toSubIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
+- (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSubIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
 {
     NSMutableArray *superDataArray = _dataArray[superIndex];
     
@@ -162,7 +172,7 @@
     NSLog(@"%@", _dataArray);
 }
 
-- (void)springBoard:(WBSpringBoard *)springBoard moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
+- (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
 {
     NSMutableArray *superDataArray = _dataArray[superIndex];
     NSString *subData = superDataArray[sourceIndex];

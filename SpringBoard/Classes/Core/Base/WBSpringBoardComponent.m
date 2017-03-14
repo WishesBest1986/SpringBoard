@@ -1,50 +1,15 @@
 //
-//  WBSpringBoard.m
+//  WBSpringBoardComponent.m
 //  Pods
 //
-//  Created by LIJUN on 2017/3/7.
+//  Created by LIJUN on 2017/3/13.
 //
 //
 
-#import "WBSpringBoard.h"
-#import "WBSpringBoardDefines.h"
-#import "WBSpringBoardLayout.h"
-#import "WBSpringBoardCell.h"
-#import "WBSpringBoardCombinedCell.h"
-#import "WBIndexRect.h"
-#import <Masonry/Masonry.h>
-#import "WBSpringBoardCombinedPopup.h"
-#import "WBSpringBoardCombination.h"
+#import "WBSpringBoardComponent.h"
+#import "WBSpringBoardComponent_Private.h"
 
-@interface WBSpringBoard () <UIScrollViewDelegate, WBSpringBoardCellDelegate, WBSpringBoardCellLongGestureDelegate, WBSpringBoardCombinationDelegate, WBSpringBoardCombinationDataSource, WBSpringBoardCombinationOutsideGestureDelegate>
-
-@property (nonatomic, weak) UIScrollView *scrollView;
-@property (nonatomic, weak) UIPageControl *pageControl;
-@property (nonatomic, strong) UIView *dragView;
-
-@property (nonatomic, assign) NSInteger numberOfItems;
-
-@property (nonatomic, assign) NSInteger pages;
-@property (nonatomic, assign) NSInteger colsPerPage;
-@property (nonatomic, assign) NSInteger rowsPerPage;
-
-@property (nonatomic, strong) NSMutableArray *frameContainerArray;
-@property (nonatomic, strong) NSMutableArray *contentIndexRectArray;
-@property (nonatomic, strong) NSMutableArray *contentCellArray;
-
-@property (nonatomic, assign) BOOL isDrag;
-@property (nonatomic, assign) NSInteger dragFromIndex;
-@property (nonatomic, weak) WBSpringBoardCell *dragTargetCell;
-
-@property (nonatomic, assign) CGPoint lastPoint;
-@property (nonatomic, assign) CGPoint previousMovePointAtWindow;
-@property (nonatomic, assign) CGPoint currentMovePointAtScrollView;
-
-@property (nonatomic, strong) dispatch_source_t flipDetectTimer;
-
-@end
-
-@implementation WBSpringBoard
+@implementation WBSpringBoardComponent
 
 #define kDragScaleFactor 1.2
 #define kScrollViewDragBoundaryThreshold 30
@@ -89,7 +54,7 @@
         make.edges.mas_equalTo(scrollView.superview);
     }];
     _scrollView = scrollView;
-
+    
     UIPageControl *pageControl = [[UIPageControl alloc] init];
     pageControl.pageIndicatorTintColor = [UIColor cyanColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
@@ -104,9 +69,8 @@
         make.bottom.mas_equalTo(pageControl.superview);
     }];
     _pageControl = pageControl;
-
+    
     _layout = [[WBSpringBoardLayout alloc] init];
-    _popupLayout = [[WBSpringBoardLayout alloc] init];
     
     _frameContainerArray = [NSMutableArray array];
     _contentIndexRectArray = [NSMutableArray array];
@@ -117,11 +81,10 @@
 
 - (void)layoutContentCells
 {
-    __weak __typeof(self)weakSelf = self;
-    
+    @WBWeakObj(self);
     [self computePages];
     [self computeFrameContainers];
-
+    
     [_contentIndexRectArray removeAllObjects];
     for (UIView *view in _contentCellArray) {
         [view removeFromSuperview];
@@ -130,9 +93,9 @@
     
     for (NSInteger i = 0; i < _numberOfItems; i ++) {
         WBSpringBoardCell *cell = nil;
-        if (_dataSource) {
-            NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
-            cell = [_dataSource springBoard:weakSelf cellForItemAtIndex:i];
+        if (_springBoardComponentDataSource) {
+            NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
+            cell = [_springBoardComponentDataSource springBoardComponent:weakself cellForItemAtIndex:i];
         } else {
             cell = [[WBSpringBoardCell alloc] init];
         }
@@ -145,7 +108,7 @@
         [_contentCellArray addObject:cell];
         [_scrollView addSubview:cell];
     }
-
+    
     CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         t = CGAffineTransformMakeScale(1, _pages);
@@ -161,7 +124,7 @@
     CGSize scrollViewSize = _scrollView.bounds.size;
     CGFloat maximumContentWidth = scrollViewSize.width - (_layout.insets.left + _layout.insets.right);
     CGFloat maximumContentHeight = scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom);
-
+    
     _colsPerPage = (maximumContentWidth + _layout.minimumHorizontalSpace) / (_layout.itemSize.width + _layout.minimumHorizontalSpace);
     _rowsPerPage = (maximumContentHeight + _layout.minimumVerticalSpace) / (_layout.itemSize.height + _layout.minimumVerticalSpace);
     
@@ -255,14 +218,13 @@
 
 - (void)recomputePageAndSortContentCellsWithAnimated:(BOOL)animated
 {
-    __weak __typeof(self)weakSelf = self;
-    
+    @WBWeakObj(self);
     _numberOfItems = 0;
-    if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoard:)], @"@selector(numberOfItemsInSpringBoard:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoard:weakSelf];
+    if (_springBoardComponentDataSource) {
+        NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
+        _numberOfItems = [_springBoardComponentDataSource numberOfItemsInSpringBoardComponent:weakself];
     }
-
+    
     [self computePages];
     [self computeFrameContainers];
     
@@ -270,7 +232,7 @@
     for (NSInteger i = 0; i < _numberOfItems; i ++) {
         [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:CGRectFromString(_frameContainerArray[i])]];
     }
-
+    
     CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
     if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
         t = CGAffineTransformMakeScale(1, _pages);
@@ -328,35 +290,6 @@
     }
 }
 
-- (void)showCombinedCellsForCell:(WBSpringBoardCell *)cell
-{
-    NSInteger index = [self indexForCell:cell];
-    
-    WBSpringBoardCombination *combination = [[WBSpringBoardCombination alloc] init];
-    combination.superIndex = index;
-    combination.delegate = self;
-    combination.dataSource = self;
-    combination.outsideGestureDelegate = self;
-    combination.layout = _popupLayout;
-    
-    WBSpringBoardCombinedPopup *popupView = [[WBSpringBoardCombinedPopup alloc] init];
-    [popupView.springBoard addSubview:combination];
-    combination.popupView = popupView;
-    [combination mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(combination.superview);
-    }];
-    
-    [kAppKeyWindow addSubview:popupView];
-    
-    popupView.alpha = 0.0;
-    [UIView animateWithDuration:kAnimationDuration animations:^{
-        popupView.alpha = 1.0;
-        [popupView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(popupView.superview);
-        }];
-    }];
-}
-
 - (BOOL)combinableWithDragedCell:(WBSpringBoardCell *)dragedCell
 {
     if ([dragedCell isKindOfClass:[WBSpringBoardCombinedCell class]]) {
@@ -370,14 +303,16 @@
 
 - (void)setLayout:(WBSpringBoardLayout *)layout
 {
-    _layout = layout;
-    
-    [self reloadData];
+    if (layout) {
+        _layout = layout;
+        
+        [self reloadData];
+    }
 }
 
-- (void)setDataSource:(id<WBSpringBoardDataSource>)dataSource
+- (void)setSpringBoardComponentDataSource:(id<WBSpringBoardComponentDataSource>)springBoardComponentDataSource
 {
-    _dataSource = dataSource;
+    _springBoardComponentDataSource = springBoardComponentDataSource;
     
     [self reloadData];
 }
@@ -410,12 +345,12 @@
 
 - (void)reloadData
 {
-    __weak __typeof(self)weakSelf = self;
+    @WBWeakObj(self);
     
     _numberOfItems = 0;
-    if (_dataSource) {
-        NSAssert([_dataSource respondsToSelector:@selector(numberOfItemsInSpringBoard:)], @"@selector(numberOfItemsInSpringBoard:) must be implemented");
-        _numberOfItems = [_dataSource numberOfItemsInSpringBoard:weakSelf];
+    if (_springBoardComponentDataSource) {
+        NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
+        _numberOfItems = [_springBoardComponentDataSource numberOfItemsInSpringBoardComponent:weakself];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -448,12 +383,8 @@
 
 - (void)clickSpringBoardCell:(WBSpringBoardCell *)cell
 {
-    if ([cell isKindOfClass:[WBSpringBoardCombinedCell class]]) {
-        [self showCombinedCellsForCell:cell];
-    } else {
-        if (self.isEdit) {
-            self.isEdit = NO;
-        }
+    if (self.isEdit) {
+        self.isEdit = NO;
     }
 }
 
@@ -485,8 +416,7 @@
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateMove:(UILongPressGestureRecognizer *)gesture
 {
-    __weak __typeof(self)weakSelf = self;
-    
+    @WBWeakObj(self);
     CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
     CGPoint currentOrigin = CGPointMake(pointAtWindow.x - _lastPoint.x, pointAtWindow.y - _lastPoint.y);
     if (_isDrag) {
@@ -496,7 +426,7 @@
         
         CGPoint scrollPoint = [gesture locationInView:_scrollView];
         _currentMovePointAtScrollView = scrollPoint;
-
+        
         double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
         _previousMovePointAtWindow = pointAtWindow;
         
@@ -522,8 +452,8 @@
                         [_contentCellArray insertObject:cell atIndex:targetIndex];
                         [self sortContentCellsWithAnimated:YES];
                         
-                        if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                            [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                        if (_springBoardComponentDataSource && [_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
+                            [_springBoardComponentDataSource springBoardComponent:weakself moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                         }
                         
                         _dragFromIndex = targetIndex;
@@ -535,8 +465,8 @@
                     [_contentCellArray insertObject:cell atIndex:targetIndex];
                     [self sortContentCellsWithAnimated:YES];
                     
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    if (_springBoardComponentDataSource && [_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
+                        [_springBoardComponentDataSource springBoardComponent:weakself moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
                     
                     _dragFromIndex = targetIndex;
@@ -553,24 +483,23 @@
 
 - (void)springBoardCell:(WBSpringBoardCell *)cell longGestureStateEnd:(UILongPressGestureRecognizer *)gesture
 {
-    __weak __typeof(self)weakSelf = self;
-
+    @WBWeakObj(self);
     if (_isDrag) {
         self.isDrag = NO;
         if ([self combinableWithDragedCell:cell]) {
             if (_dragTargetCell) {
                 NSInteger targetIndex = [self indexForCell:_dragTargetCell];
                 if (_dragTargetCell.showDirectoryBorder) {
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:combineItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    if (_springBoardComponentDataSource && [_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:combineItemAtIndex:toIndex:)]) {
+                        [_springBoardComponentDataSource springBoardComponent:weakself combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
                     
                     WBSpringBoardCell *combinedCell = nil;
-                    if (_dataSource) {
-                        NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
+                    if (_springBoardComponentDataSource) {
+                        NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:cellForItemAtIndex:)], @"@selector(springBoardComponent:cellForItemAtIndex:) must be implemented");
                         
                         NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
-                        combinedCell = [_dataSource springBoard:weakSelf cellForItemAtIndex:combinedTargetIndex];
+                        combinedCell = [_springBoardComponentDataSource springBoardComponent:weakself cellForItemAtIndex:combinedTargetIndex];
                     } else {
                         combinedCell = [[WBSpringBoardCombinedCell alloc] init];
                     }
@@ -585,11 +514,11 @@
                     
                     [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
                     [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-
+                    
                     [self recomputePageAndSortContentCellsWithAnimated:YES];
                 } else {
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
+                    if (_springBoardComponentDataSource && [_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:moveItemAtIndex:toIndex:)]) {
+                        [_springBoardComponentDataSource springBoardComponent:weakself moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
                     
                     [_contentCellArray removeObjectAtIndex:_dragFromIndex];
@@ -618,189 +547,6 @@
         _dragView = nil;
     }
     cell.hidden = NO;
-}
-
-#pragma mark - WBSpringBoardCombinationDelegate Method
-
-#pragma mark - WBSpringBoardCombinationDataSource Method
-
-- (NSInteger)numberOfItemsInSpringBoardCombination:(WBSpringBoardCombination *)springBoardCombination
-{
-    __weak __typeof(self)weakSelf = self;
-    
-    NSInteger superIndex = springBoardCombination.superIndex;
-    return [_dataSource springBoard:weakSelf numberOfSubItemsAtIndex:superIndex];
-}
-
-- (WBSpringBoardCell *)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination  cellForItemAtIndex:(NSInteger)index
-{
-    __weak __typeof(self)weakSelf = self;
-
-    NSInteger superIndex = springBoardCombination.superIndex;
-    return [_dataSource springBoard:weakSelf subCellForItemAtIndex:index withSuperIndex:superIndex];
-}
-
-- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
-{
-    __weak __typeof(self)weakSelf = self;
-    
-    NSInteger superIndex = springBoardCombination.superIndex;
-    return [_dataSource springBoard:weakSelf moveSubItemAtIndex:sourceIndex toSubIndex:destinationIndex withSuperIndex:superIndex];
-}
-
-#pragma mark - WBSpringBoardCombinationOutsideGestureDelegate Method
-
-- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureBegin:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
-{
-    __weak __typeof(self)weakSelf = self;
-
-    _isDrag = YES;
-    _dragFromIndex = 0;
-    
-    [_dataSource springBoard:weakSelf moveSubItemAtIndex:[springBoardCombination indexForCell:cell] toSuperIndex:0 withSuperIndex:springBoardCombination.superIndex];
-    
-    [_scrollView addSubview:cell];
-    [_contentCellArray insertObject:cell atIndex:0];
-    
-    [self recomputePageAndSortContentCellsWithAnimated:YES];
-}
-
-- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureMove:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
-{
-    __weak __typeof(self)weakSelf = self;
-    
-    CGPoint pointAtWindow = [gesture locationInView:kAppKeyWindow];
-    if (_isDrag) {
-        CGPoint scrollPoint = [gesture locationInView:_scrollView];
-        _currentMovePointAtScrollView = scrollPoint;
-        
-        double fingerSpeed = [self fingerMoveSpeedWithPreviousPoint:_previousMovePointAtWindow nowPoint:pointAtWindow];
-        _previousMovePointAtWindow = pointAtWindow;
-        
-        NSDictionary *targetInfo = [self targetInfoWithPoint:scrollPoint];
-        NSInteger targetIndex = [targetInfo[@"targetIndex"] integerValue];
-        BOOL targetInnerRect = [targetInfo[@"innerRect"] boolValue];
-        
-        if (targetIndex != -1 && targetIndex != _dragFromIndex) {
-            // reset last step showDirectoryView targetCell
-            if (_dragTargetCell && _dragTargetCell != _contentCellArray[targetIndex]) {
-                _dragTargetCell.showDirectoryBorder = NO;
-            }
-            
-            _dragTargetCell = _contentCellArray[targetIndex];
-            if ([self combinableWithDragedCell:cell]) {
-                if (targetInnerRect) {
-                    _dragTargetCell.showDirectoryBorder = YES;
-                } else {
-                    _dragTargetCell.showDirectoryBorder = NO;
-                    
-                    if (fingerSpeed < 2) {
-                        [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                        [_contentCellArray insertObject:cell atIndex:targetIndex];
-                        [self sortContentCellsWithAnimated:YES];
-                        
-                        if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                            [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                        }
-                        
-                        _dragFromIndex = targetIndex;
-                    }
-                }
-            } else {
-                if (fingerSpeed < 2) {
-                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                    [_contentCellArray insertObject:cell atIndex:targetIndex];
-                    [self sortContentCellsWithAnimated:YES];
-                    
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                    }
-                    
-                    _dragFromIndex = targetIndex;
-                }
-            }
-        } else {
-            if (_dragTargetCell) {
-                _dragTargetCell.showDirectoryBorder = NO;
-                _dragTargetCell = nil;
-            }
-        }
-    }
-}
-
-- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureEnd:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
-{
-    __weak __typeof(self)weakSelf = self;
-    
-    if (_isDrag) {
-        self.isDrag = NO;
-        if ([self combinableWithDragedCell:cell]) {
-            if (_dragTargetCell) {
-                NSInteger targetIndex = [self indexForCell:_dragTargetCell];
-                if (_dragTargetCell.showDirectoryBorder) {
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:combineItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                    }
-                    
-                    WBSpringBoardCell *combinedCell = nil;
-                    if (_dataSource) {
-                        NSAssert([_dataSource respondsToSelector:@selector(springBoard:cellForItemAtIndex:)], @"@selector(springBoard:cellForItemAtIndex:) must be implemented");
-                        
-                        NSInteger combinedTargetIndex = (targetIndex > _dragFromIndex) ? (targetIndex - 1) : targetIndex;
-                        combinedCell = [_dataSource springBoard:weakSelf cellForItemAtIndex:combinedTargetIndex];
-                    } else {
-                        combinedCell = [[WBSpringBoardCombinedCell alloc] init];
-                    }
-                    combinedCell.frame = CGRectFromString(_frameContainerArray[targetIndex]);
-                    combinedCell.delegate = self;
-                    combinedCell.longGestureDelegate = self;
-                    combinedCell.isEdit = YES;
-                    
-                    [cell removeFromSuperview];
-                    [_dragTargetCell removeFromSuperview];
-                    [_scrollView addSubview:combinedCell];
-                    
-                    [_contentCellArray replaceObjectAtIndex:targetIndex withObject:combinedCell];
-                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                    
-                    [self recomputePageAndSortContentCellsWithAnimated:YES];
-                } else {
-                    if (_dataSource && [_dataSource respondsToSelector:@selector(springBoard:moveItemAtIndex:toIndex:)]) {
-                        [_dataSource springBoard:weakSelf moveItemAtIndex:_dragFromIndex toIndex:targetIndex];
-                    }
-                    
-                    [_contentCellArray removeObjectAtIndex:_dragFromIndex];
-                    [_contentCellArray insertObject:cell atIndex:targetIndex];
-                    [self sortContentCellsWithAnimated:YES];
-                    
-                    _dragFromIndex = targetIndex;
-                }
-            }
-        }
-        
-        _dragTargetCell.showDirectoryBorder = NO;
-        [_dragView removeFromSuperview];
-        _dragView = nil;
-    }
-    cell.hidden = NO;
-    
-    cell.delegate = self;
-    cell.longGestureDelegate = self;
-}
-
-- (void)springBoardCombination:(WBSpringBoardCombination *)springBoardCombination outsideGestureCancel:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
-{
-    if (_isDrag) {
-        self.isDrag = NO;
-        
-        _dragTargetCell.showDirectoryBorder = NO;
-        [_dragView removeFromSuperview];
-        _dragView = nil;
-    }
-    cell.hidden = NO;
-    
-    cell.delegate = self;
-    cell.longGestureDelegate = self;
 }
 
 @end

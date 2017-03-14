@@ -3,12 +3,14 @@
 #endif
 
 #import "WBIndexRect.h"
-#import "WBSpringBoard.h"
 #import "WBSpringBoardCell.h"
-#import "WBSpringBoardCombination.h"
 #import "WBSpringBoardCombinedCell.h"
-#import "WBSpringBoardCombinedPopup.h"
+#import "WBSpringBoardComponent.h"
+#import "WBSpringBoardComponent_Private.h"
 #import "WBSpringBoardLayout.h"
+#import "WBSpringBoardInnerView.h"
+#import "WBSpringBoardPopupView.h"
+#import "WBSpringBoardView.h"
 #import "UIView+Layout.h"
 #import "WBSpringBoardDefines.h"
 #import "SpringBoard.h"
