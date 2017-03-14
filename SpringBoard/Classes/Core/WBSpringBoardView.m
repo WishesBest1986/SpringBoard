@@ -204,7 +204,7 @@
     } else if ([springBoardComponent isKindOfClass:WBSpringBoardInnerView.class]) {
         if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:moveSubItemAtIndex:toSubIndex:withSuperIndex:)]) {
             NSInteger superIndex = ((WBSpringBoardInnerView *)springBoardComponent).superIndex;
-            return [_springBoardDataSource springBoardView:weakself moveSubItemAtIndex:sourceIndex toSubIndex:destinationIndex withSuperIndex:superIndex];
+            [_springBoardDataSource springBoardView:weakself moveSubItemAtIndex:sourceIndex toSubIndex:destinationIndex withSuperIndex:superIndex];
         }
     }
 }

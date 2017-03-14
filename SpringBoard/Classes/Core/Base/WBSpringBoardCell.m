@@ -87,23 +87,23 @@
 
 - (void)clickAction:(id)sender
 {
-    __weak __typeof(self)weakSelf = self;
+    @WBWeakObj(self);
     if (_delegate && [_delegate respondsToSelector:@selector(clickSpringBoardCell:)]) {
-        [_delegate clickSpringBoardCell:weakSelf];
+        [_delegate clickSpringBoardCell:weakself];
     }
 }
 
 - (void)longGestureAction:(UILongPressGestureRecognizer *)gesture
 {
-    __weak __typeof(self)weakSelf = self;
+    @WBWeakObj(self);
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:
         {
             if (_delegate && [_delegate respondsToSelector:@selector(editingSpringBoardCell:)]) {
-                [_delegate editingSpringBoardCell:weakSelf];
+                [_delegate editingSpringBoardCell:weakself];
             }
             if (_longGestureDelegate && [_longGestureDelegate respondsToSelector:@selector(springBoardCell:longGestureStateBegin:)]) {
-                [_longGestureDelegate springBoardCell:weakSelf longGestureStateBegin:gesture];
+                [_longGestureDelegate springBoardCell:weakself longGestureStateBegin:gesture];
             }
         }
             break;
@@ -111,7 +111,7 @@
         case UIGestureRecognizerStateChanged:
         {
             if (_longGestureDelegate && [_longGestureDelegate respondsToSelector:@selector(springBoardCell:longGestureStateMove:)]) {
-                [_longGestureDelegate springBoardCell:weakSelf longGestureStateMove:gesture];
+                [_longGestureDelegate springBoardCell:weakself longGestureStateMove:gesture];
             }
         }
             break;
@@ -119,7 +119,7 @@
         case UIGestureRecognizerStateCancelled:
         {
             if (_longGestureDelegate && [_longGestureDelegate respondsToSelector:@selector(springBoardCell:longGestureStateCancel:)]) {
-                [_longGestureDelegate springBoardCell:weakSelf longGestureStateCancel:gesture];
+                [_longGestureDelegate springBoardCell:weakself longGestureStateCancel:gesture];
             }
         }
             break;
@@ -127,7 +127,7 @@
         case UIGestureRecognizerStateEnded:
         {
             if (_longGestureDelegate && [_longGestureDelegate respondsToSelector:@selector(springBoardCell:longGestureStateEnd:)]) {
-                [_longGestureDelegate springBoardCell:weakSelf longGestureStateEnd:gesture];
+                [_longGestureDelegate springBoardCell:weakself longGestureStateEnd:gesture];
             }
         }
             break;

@@ -17,6 +17,8 @@
 
 @implementation WBSpringBoardInnerView
 
+#define kInnerViewScaleFactor 1.2
+
 #pragma mark - Override Method
 
 - (void)setIsEdit:(BOOL)isEdit
@@ -46,7 +48,7 @@
         }
         
         CGPoint scrollPoint = [gesture locationInView:self.scrollView];
-        if (!CGRectContainsPoint(CGRectApplyAffineTransform(self.scrollView.bounds, CGAffineTransformMakeScale(1.2, 1.2)), scrollPoint)) {
+        if (!CGRectContainsPoint(CGRectApplyAffineTransform(self.scrollView.bounds, CGAffineTransformMakeScale(kInnerViewScaleFactor, kInnerViewScaleFactor)), scrollPoint)) {
             self.isDragOutsideMode = YES;
             
             [_popupView hideWithAnimated:YES removeFromSuperView:NO];
