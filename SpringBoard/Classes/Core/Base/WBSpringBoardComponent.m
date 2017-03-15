@@ -56,7 +56,7 @@
     _scrollView = scrollView;
     
     UIPageControl *pageControl = [[UIPageControl alloc] init];
-    pageControl.pageIndicatorTintColor = [UIColor cyanColor];
+    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
     pageControl.enabled = NO;
     pageControl.numberOfPages = 1;
@@ -445,15 +445,15 @@
         if (targetIndex != -1 && targetIndex != _dragFromIndex) {
             // reset last step showDirectoryView targetCell
             if (_dragTargetCell && _dragTargetCell != _contentCellArray[targetIndex]) {
-                _dragTargetCell.showDirectoryBorder = NO;
+                _dragTargetCell.showDirectoryHolderView = NO;
             }
             
             _dragTargetCell = _contentCellArray[targetIndex];
             if ([self combinableWithDragedCell:cell]) {
                 if (targetInnerRect) {
-                    _dragTargetCell.showDirectoryBorder = YES;
+                    _dragTargetCell.showDirectoryHolderView = YES;
                 } else {
-                    _dragTargetCell.showDirectoryBorder = NO;
+                    _dragTargetCell.showDirectoryHolderView = NO;
                     
                     if (fingerSpeed < 2) {
                         [_contentCellArray removeObjectAtIndex:_dragFromIndex];
@@ -482,7 +482,7 @@
             }
         } else {
             if (_dragTargetCell) {
-                _dragTargetCell.showDirectoryBorder = NO;
+                _dragTargetCell.showDirectoryHolderView = NO;
                 _dragTargetCell = nil;
             }
         }
@@ -497,7 +497,7 @@
         if ([self combinableWithDragedCell:cell]) {
             if (_dragTargetCell) {
                 NSInteger targetIndex = [self indexForCell:_dragTargetCell];
-                if (_dragTargetCell.showDirectoryBorder) {
+                if (_dragTargetCell.showDirectoryHolderView) {
                     if (_springBoardComponentDataSource && [_springBoardComponentDataSource respondsToSelector:@selector(springBoardComponent:combineItemAtIndex:toIndex:)]) {
                         [_springBoardComponentDataSource springBoardComponent:weakself combineItemAtIndex:_dragFromIndex toIndex:targetIndex];
                     }
@@ -538,7 +538,7 @@
             }
         }
         
-        _dragTargetCell.showDirectoryBorder = NO;
+        _dragTargetCell.showDirectoryHolderView = NO;
         [_dragView removeFromSuperview];
         _dragView = nil;
     }
@@ -550,7 +550,7 @@
     if (_isDrag) {
         self.isDrag = NO;
         
-        _dragTargetCell.showDirectoryBorder = NO;
+        _dragTargetCell.showDirectoryHolderView = NO;
         [_dragView removeFromSuperview];
         _dragView = nil;
     }

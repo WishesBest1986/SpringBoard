@@ -43,7 +43,7 @@
     _springBoardView.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
     _springBoardView.layout.minimumHorizontalSpace = 5;
     _springBoardView.allowSingleItemCombinedCell = NO;
-        
+    
     _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 5, 5);
     _springBoardView.innerViewLayout.minimumHorizontalSpace = 5;
 }
@@ -83,7 +83,6 @@
     WBSpringBoardCell *cell = nil;
     if ([data isKindOfClass:NSString.class]) {
         WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
-        customerCell.backgroundColor = [UIColor lightGrayColor];
         customerCell.label.text = (NSString *)data;
         
         cell = customerCell;

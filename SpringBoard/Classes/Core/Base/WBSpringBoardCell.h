@@ -28,13 +28,15 @@
 
 @interface WBSpringBoardCell : UIControl
 
+@property (nonatomic, readonly) UIImageView *imageView;
+@property (nonatomic, readonly) UILabel *label;
+
 @property (nonatomic, weak) id<WBSpringBoardCellDelegate> delegate;
 @property (nonatomic, weak) id<WBSpringBoardCellLongGestureDelegate> longGestureDelegate;
 @property (nonatomic, readonly) UILongPressGestureRecognizer *longGesture;
 
-@property (nonatomic, assign) BOOL isDirectory;
 @property (nonatomic, assign) BOOL isEdit;
 
-@property (nonatomic, assign) BOOL showDirectoryBorder;
+@property (nonatomic, assign) BOOL showDirectoryHolderView;
 
 @end

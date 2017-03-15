@@ -10,6 +10,4 @@
 
 @interface WBCustomerCell : WBSpringBoardCell
 
-@property (nonatomic, readonly) UILabel *label;
-
 @end

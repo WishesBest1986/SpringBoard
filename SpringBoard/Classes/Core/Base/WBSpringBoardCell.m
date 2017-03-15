@@ -12,11 +12,17 @@
 
 @interface WBSpringBoardCell ()
 
-@property (nonatomic, weak) UIView *directoryBorder;
+@property (nonatomic, weak) UIView *directoryHolderView;
 
 @end
 
 @implementation WBSpringBoardCell
+
+#define kImageViewSize CGSizeMake(70, 70)
+#define kImageViewCornerRadius 10
+#define kLabelFontSize 12
+
+#define kViewScaleFactor 1.2
 
 #pragma mark - Init & Dealloc
 
@@ -29,18 +35,59 @@
         _longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
         [self addGestureRecognizer:_longGesture];
         
-        UIView *directoryBorder = [[UIView alloc] initWithFrame:CGRectZero];
-        directoryBorder.layer.borderColor = [UIColor blueColor].CGColor;
-        directoryBorder.layer.borderWidth = 0.5;
-        directoryBorder.layer.cornerRadius = 5;
-        directoryBorder.userInteractionEnabled = NO;
-        directoryBorder.hidden = YES;
-        [self addSubview:directoryBorder];
-        [directoryBorder mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        UIView *directoryHolderView = [[UIView alloc] initWithFrame:CGRectZero];
+        directoryHolderView.backgroundColor = [UIColor lightGrayColor];
+        directoryHolderView.layer.cornerRadius = kImageViewCornerRadius;
+        directoryHolderView.userInteractionEnabled = NO;
+        directoryHolderView.hidden = YES;
+        [self addSubview:directoryHolderView];
+        _directoryHolderView = directoryHolderView;
+        
+        UIView *topSpaceView = [UIView new];
+        UIView *bottomSpaceView = [UIView new];
+        [self addSubview:topSpaceView];
+        [self addSubview:bottomSpaceView];
+        
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.backgroundColor = [UIColor grayColor];
+        imageView.clipsToBounds = YES;
+        imageView.layer.cornerRadius = kImageViewCornerRadius;
+        [self addSubview:imageView];
+        _imageView = imageView;
+        
+        UILabel *label = [[UILabel alloc] init];
+        label.font = [UIFont systemFontOfSize:kLabelFontSize];
+        [self addSubview:label];
+        _label = label;
+        
+        [directoryHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(imageView);
         }];
         
-        _directoryBorder = directoryBorder;
+        [topSpaceView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self);
+            make.height.mas_equalTo(bottomSpaceView);
+            make.centerX.mas_equalTo(self);
+        }];
+        
+        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self);
+            make.size.mas_equalTo(kImageViewSize);
+            make.top.mas_equalTo(topSpaceView.mas_bottom);
+        }];
+
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self);
+            make.width.mas_lessThanOrEqualTo(imageView).offset(10);
+            make.height.mas_equalTo(label.font.lineHeight);
+            make.top.mas_equalTo(imageView.mas_bottom).offset(2);
+        }];
+        
+        [bottomSpaceView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(label.mas_bottom);
+            make.bottom.mas_equalTo(self);
+            make.centerX.mas_equalTo(self);
+        }];
     }
     return self;
 }
@@ -63,21 +110,21 @@
     }
 }
 
-- (void)setShowDirectoryBorder:(BOOL)showDirectoryBorder
+- (void)setShowDirectoryHolderView:(BOOL)showDirectoryHolderView
 {
-    if (_showDirectoryBorder != showDirectoryBorder) {
-        _showDirectoryBorder = showDirectoryBorder;
+    if (_showDirectoryHolderView != showDirectoryHolderView) {
+        _showDirectoryHolderView = showDirectoryHolderView;
         
-        if (showDirectoryBorder) {
-            _directoryBorder.hidden = NO;
+        if (showDirectoryHolderView) {
+            _directoryHolderView.hidden = NO;
             [UIView animateWithDuration:kAnimationSlowDuration animations:^{
-                _directoryBorder.layer.affineTransform = CGAffineTransformMakeScale(1.2, 1.2);
+                _directoryHolderView.layer.affineTransform = CGAffineTransformMakeScale(kViewScaleFactor, kViewScaleFactor);
             }];
         } else {
             [UIView animateWithDuration:kAnimationSlowDuration animations:^{
-                _directoryBorder.layer.affineTransform = CGAffineTransformIdentity;
+                _directoryHolderView.layer.affineTransform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
-                _directoryBorder.hidden = YES;
+                _directoryHolderView.hidden = YES;
             }];
         }
     }
