@@ -28,4 +28,7 @@
 
 #define kCellInnerRectSideSpace 15
 
+#define kCombinedCellShowItemColCount 3
+#define kCombinedCellShowItemRowCount 3
+
 #endif /* WBSpringBoardDefines_h */

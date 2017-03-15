@@ -88,7 +88,6 @@
         cell = customerCell;
     } else if ([data isKindOfClass:NSArray.class]) {
         WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
-        customerCombinedCell.backgroundColor = [UIColor darkGrayColor];
         customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
         
         cell = customerCombinedCell;
@@ -117,13 +116,11 @@
         
         if ([data isKindOfClass:NSString.class]) {
             WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
-            customerCell.backgroundColor = [UIColor lightGrayColor];
             customerCell.label.text = (NSString *)data;
             
             cell = customerCell;
         } else if ([data isKindOfClass:NSArray.class]) {
             WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
-            customerCombinedCell.backgroundColor = [UIColor darkGrayColor];
             customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
             
             cell = customerCombinedCell;

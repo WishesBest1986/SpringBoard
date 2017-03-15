@@ -10,4 +10,6 @@
 
 @interface WBSpringBoardCombinedCell : WBSpringBoardCell
 
+@property (nonatomic, readonly) UIView *directoryView;
+
 @end
