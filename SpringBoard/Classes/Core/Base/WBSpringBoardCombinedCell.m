@@ -12,6 +12,7 @@
 
 @interface WBSpringBoardCombinedCell ()
 
+@property (nonatomic, strong) NSMutableArray<UIImageView *> *imageViewArray;
 @property (nonatomic, strong) NSMutableArray *imageViewColArray;
 @property (nonatomic, strong) NSMutableArray *imageViewRowArray;
 
@@ -35,12 +36,11 @@
         directoryView.userInteractionEnabled = NO;
         [self addSubview:directoryView];
         _directoryView = directoryView;
-        
         [directoryView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.imageView);
         }];
         
-        
+        _imageViewArray = [NSMutableArray array];
         _imageViewColArray = [NSMutableArray array];
         _imageViewRowArray = [NSMutableArray array];
         
@@ -53,24 +53,33 @@
         for (NSInteger row = 0; row < kCombinedCellShowItemRowCount; row ++) {
             for (NSInteger col = 0; col < kCombinedCellShowItemColCount; col ++) {
                 UIImageView *imageView = [[UIImageView alloc] init];
-                imageView.backgroundColor = [UIColor grayColor];
+                imageView.contentMode = UIViewContentModeScaleAspectFill;
                 imageView.layer.cornerRadius = kImageViewCornerRadius;
                 imageView.layer.masksToBounds = YES;
                 [directoryView addSubview:imageView];
 
+                [_imageViewArray addObject:imageView];
                 _imageViewRowArray[row][col] = imageView;
                 _imageViewColArray[col][row] = imageView;
             }
         }
         
         for (NSInteger row = 0; row < kCombinedCellShowItemRowCount; row ++) {
-            [_imageViewRowArray[row] mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:5 leadSpacing:5 tailSpacing:5];
+            [_imageViewRowArray[row] mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:kImageViewSpacing leadSpacing:kImageViewSpacing tailSpacing:kImageViewSpacing];
         }
         for (NSInteger col = 0; col < kCombinedCellShowItemColCount; col ++) {
-            [_imageViewColArray[col] mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:5 leadSpacing:5 tailSpacing:5];
+            [_imageViewColArray[col] mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:kImageViewSpacing leadSpacing:kImageViewSpacing tailSpacing:kImageViewSpacing];
         }
     }
     return self;
+}
+
+- (void)refreshSubImages:(NSArray<UIImage *> *)imageArray
+{
+    for (NSInteger i = 0; i < _imageViewArray.count; i ++) {
+        UIImage *image = (i < imageArray.count) ? imageArray[i] : nil;
+        _imageViewArray[i].image = image;
+    }
 }
 
 @end

@@ -91,11 +91,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0923F623C3EADD5A1912F4336FE4DCD1 /* Pods_SpringBoard_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpringBoard_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0923F623C3EADD5A1912F4336FE4DCD1 /* Pods_SpringBoard_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SpringBoard_Example.framework; path = "Pods-SpringBoard_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0925CC604B01F156279E8952DDE3EDDB /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
 		11B0A00B1A98166344300F0A53C83DFB /* Pods-SpringBoard_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SpringBoard_Example-resources.sh"; sourceTree = "<group>"; };
 		11FCCFC45B9D09B0C8BA7D98D0A80E78 /* Pods-SpringBoard_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SpringBoard_Example-frameworks.sh"; sourceTree = "<group>"; };
-		1223C7DF673AE8166916F6739A98500D /* SpringBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpringBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1223C7DF673AE8166916F6739A98500D /* SpringBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SpringBoard.framework; path = SpringBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13F239D4A97D93BFB86DB410D110EE50 /* WBSpringBoardCombinedCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardCombinedCell.h; sourceTree = "<group>"; };
 		13FC8E35EDBC629D62166DD797E6DE52 /* Masonry-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-umbrella.h"; sourceTree = "<group>"; };
 		1F0183E721D7FD6AF70B4A911C1B1B95 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 		2CB2AB2E3EE1B003147CE622DB867E1C /* WBSpringBoardComponent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardComponent.m; sourceTree = "<group>"; };
 		2DEC25CD6D57CC12DE2250EA7EB05F17 /* WBSpringBoardPopupView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardPopupView.m; sourceTree = "<group>"; };
 		2F69E835336330FF06E7268D32D667C9 /* NSLayoutConstraint+MASDebugAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSLayoutConstraint+MASDebugAdditions.h"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.h"; sourceTree = "<group>"; };
-		3027ECF3675B7D92CFE998E7807ED8BD /* Masonry.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Masonry.modulemap; sourceTree = "<group>"; };
+		3027ECF3675B7D92CFE998E7807ED8BD /* Masonry.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Masonry.modulemap; sourceTree = "<group>"; };
 		303B58A2959C8EEE96799AD558DDA1D3 /* Masonry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Masonry.h; path = Masonry/Masonry.h; sourceTree = "<group>"; };
 		3980E01C213ECEDEABAC38C1CFD3946D /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ViewController+MASAdditions.m"; path = "Masonry/ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		3C92828F2942644BE55FBB6321F91E60 /* WBSpringBoardCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardCell.h; sourceTree = "<group>"; };
@@ -115,9 +115,9 @@
 		49719E37B49E717BB461472BC77D9155 /* WBSpringBoardInnerView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardInnerView.m; sourceTree = "<group>"; };
 		4BA4B00B0315658BA0948A043AA03444 /* SpringBoard-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SpringBoard-prefix.pch"; sourceTree = "<group>"; };
 		4C7DFC5BA9D91B77C2BBA1AAAF758AB4 /* SpringBoard-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SpringBoard-umbrella.h"; sourceTree = "<group>"; };
-		4F36BE379FA10D3D4DB30C0B9CA55664 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F36BE379FA10D3D4DB30C0B9CA55664 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Masonry.framework; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		537638D0C329C86D4ED401237F5D895F /* MASCompositeConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASCompositeConstraint.m; path = Masonry/MASCompositeConstraint.m; sourceTree = "<group>"; };
-		5599ED17365264246BD4FA98C9023498 /* SpringBoard.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = SpringBoard.modulemap; sourceTree = "<group>"; };
+		5599ED17365264246BD4FA98C9023498 /* SpringBoard.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = SpringBoard.modulemap; sourceTree = "<group>"; };
 		5A649F9297535214EF97548C9EA9FA33 /* NSArray+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASAdditions.h"; path = "Masonry/NSArray+MASAdditions.h"; sourceTree = "<group>"; };
 		6058631B5EA522DCE551B0458085C035 /* WBSpringBoardView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardView.m; sourceTree = "<group>"; };
 		611E26C24600589F4729E5EF510272FB /* MASLayoutConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASLayoutConstraint.m; path = Masonry/MASLayoutConstraint.m; sourceTree = "<group>"; };
@@ -135,13 +135,13 @@
 		7EC0A25DD6F58D072A4ACFC92D9237BF /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
 		7F44A621BE24B87AEF75DD7193846188 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		88521F0D0CD896EB7EB97EBCD22D91A6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9449CCAF5792ED4D442461F3868837A6 /* WBSpringBoardCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WBSpringBoardCell.m; sourceTree = "<group>"; };
 		953C4BA50857E157BDEB5569857A3EAF /* Pods-SpringBoard_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SpringBoard_Example-dummy.m"; sourceTree = "<group>"; };
 		96DCAB46CA2931B8140F2639F17404AF /* MASViewAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewAttribute.h; path = Masonry/MASViewAttribute.h; sourceTree = "<group>"; };
 		986CB32629319F7F2256662716334944 /* MASConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraint.m; path = Masonry/MASConstraint.m; sourceTree = "<group>"; };
 		A02D339E60E114FCC992372E93245BA1 /* MASConstraintMaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraintMaker.h; path = Masonry/MASConstraintMaker.h; sourceTree = "<group>"; };
-		A1A070792A3007394C3E792C1AF039D5 /* Pods-SpringBoard_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SpringBoard_Example.modulemap"; sourceTree = "<group>"; };
+		A1A070792A3007394C3E792C1AF039D5 /* Pods-SpringBoard_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SpringBoard_Example.modulemap"; sourceTree = "<group>"; };
 		A214B89738295B4A4B00EEB1960E8865 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSLayoutConstraint+MASDebugAdditions.m"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
 		A4A99AE23B6A46705534A6B985B2426C /* WBSpringBoardComponent_Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WBSpringBoardComponent_Private.h; sourceTree = "<group>"; };
 		AD04C760F0EB4FE7B23D85D56145A97F /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
@@ -211,6 +211,7 @@
 			children = (
 				415E272AA54EFCECC465CF7E1FAA0D73 /* Classes */,
 			);
+			name = SpringBoard;
 			path = SpringBoard;
 			sourceTree = "<group>";
 		};
@@ -221,6 +222,7 @@
 				6D1557DA3C813D7AA8E931596042DC40 /* Core */,
 				45FCCF3E37A01D5F87ECF460ECBE71DC /* Helper */,
 			);
+			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -231,6 +233,7 @@
 				CD864581AE94A87DA97F774BAD029858 /* UIView+Layout.m */,
 				3D9772B178CD72FC318741DF48F5C6A4 /* WBSpringBoardDefines.h */,
 			);
+			name = Helper;
 			path = Helper;
 			sourceTree = "<group>";
 		};
@@ -276,6 +279,7 @@
 				6058631B5EA522DCE551B0458085C035 /* WBSpringBoardView.m */,
 				71429509726263037FECFEB604BF9C19 /* Base */,
 			);
+			name = Core;
 			path = Core;
 			sourceTree = "<group>";
 		};
@@ -294,6 +298,7 @@
 				6F2CED093866D45D264447FA8A3A8BCE /* WBSpringBoardLayout.h */,
 				E9040B30DBD8AD3BB1BD0E28BB7B209E /* WBSpringBoardLayout.m */,
 			);
+			name = Base;
 			path = Base;
 			sourceTree = "<group>";
 		};
@@ -367,6 +372,7 @@
 				3980E01C213ECEDEABAC38C1CFD3946D /* ViewController+MASAdditions.m */,
 				AB2D74BCA437C31F2B7B0E2905262257 /* Support Files */,
 			);
+			name = Masonry;
 			path = Masonry;
 			sourceTree = "<group>";
 		};

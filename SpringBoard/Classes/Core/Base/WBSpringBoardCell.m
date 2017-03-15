@@ -49,9 +49,10 @@
         [self addSubview:bottomSpaceView];
         
         UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.backgroundColor = [UIColor grayColor];
-        imageView.clipsToBounds = YES;
+        imageView.image = [UIImage imageNamed:@"file"];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.layer.cornerRadius = kImageViewCornerRadius;
+        imageView.layer.masksToBounds = YES;
         [self addSubview:imageView];
         _imageView = imageView;
         

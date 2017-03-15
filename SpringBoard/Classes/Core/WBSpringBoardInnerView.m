@@ -71,7 +71,7 @@
             [_springBoardInnerViewOutsideGestureDelegate springBoardInnerView:weakself outsideGestureEnd:gesture fromCell:cell];
         }
         
-        [_popupView removeFromSuperview];
+        [_popupView hideWithAnimated:NO removeFromSuperView:YES];
     
         self.isDragOutsideMode = NO;
     }
@@ -87,7 +87,7 @@
             [_springBoardInnerViewOutsideGestureDelegate springBoardInnerView:weakself outsideGestureCancel:gesture fromCell:cell];
         }
         
-        [_popupView removeFromSuperview];
+        [_popupView hideWithAnimated:NO removeFromSuperView:YES];
         
         self.isDragOutsideMode = NO;
     }

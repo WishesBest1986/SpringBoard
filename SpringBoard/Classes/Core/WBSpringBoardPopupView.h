@@ -11,7 +11,9 @@
 @interface WBSpringBoardPopupView : UIControl
 
 @property (nonatomic, readonly) UIView *contentView;
+@property (nonatomic, assign) BOOL isEdit;
 
+- (void)setTitle:(NSString *)title;
 - (void)hideWithAnimated:(BOOL)animated removeFromSuperView:(BOOL)remove;
 
 @end

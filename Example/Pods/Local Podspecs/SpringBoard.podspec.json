@@ -1,8 +1,8 @@
 {
   "name": "SpringBoard",
   "version": "0.1.0",
-  "summary": "A short description of SpringBoard.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "Follow iOS Desktop SpringBoard",
+  "description": "SpringBoard Project is aim to implement iOS Desktop SpringBoard.",
   "homepage": "https://github.com/WishesBest1986/SpringBoard.git",
   "license": {
     "type": "MIT",

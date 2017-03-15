@@ -19,6 +19,8 @@
 
 @implementation WBSpringBoardPopupView
 
+#pragma mark - Init & Dealloc
+
 - (instancetype)init
 {
     self = [super init];
@@ -38,7 +40,7 @@
         UITextField *textField = [[UITextField alloc] init];
         textField.borderStyle = UITextBorderStyleRoundedRect;
         textField.font = [UIFont systemFontOfSize:30];
-        textField.clearButtonMode = UITextFieldViewModeAlways;
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.textAlignment = NSTextAlignmentCenter;
         textField.returnKeyType = UIReturnKeyDone;
         textField.delegate = self;
@@ -66,11 +68,38 @@
         }];
         
         [self addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(innerViewEditChangedNotification:)
+                                                     name:kNotificationKeyInnerViewEditChanged
+                                                   object:nil];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kNotificationKeyInnerViewEditChanged
+                                                  object:nil];
+}
+
+#pragma mark - Setter & Getter
+
+- (void)setIsEdit:(BOOL)isEdit
+{
+    _isEdit = isEdit;
+    
+    _textField.enabled = isEdit;
+    _textField.borderStyle = isEdit ? UITextBorderStyleRoundedRect : UITextBorderStyleNone;
+}
+
 #pragma mark - Public Method
+
+- (void)setTitle:(NSString *)title
+{
+    _textField.text = title;
+}
 
 - (void)hideWithAnimated:(BOOL)animated removeFromSuperView:(BOOL)remove
 {
@@ -88,6 +117,12 @@
 - (void)clickAction:(id)sender
 {
     [self hideWithAnimated:YES removeFromSuperView:YES];
+}
+
+- (void)innerViewEditChangedNotification:(NSNotification *)notification
+{
+    BOOL edit = [notification.object boolValue];
+    self.isEdit = edit;
 }
 
 #pragma mark - UITextFieldDelegate Method

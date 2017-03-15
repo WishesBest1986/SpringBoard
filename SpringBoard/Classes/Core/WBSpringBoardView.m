@@ -82,6 +82,8 @@
     
     WBSpringBoardPopupView *popupView = [[WBSpringBoardPopupView alloc] init];
     [popupView.contentView addSubview:innerView];
+    popupView.isEdit = self.isEdit;
+    [popupView setTitle:cell.label.text];
     innerView.popupView = popupView;
     [innerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(innerView.superview);
