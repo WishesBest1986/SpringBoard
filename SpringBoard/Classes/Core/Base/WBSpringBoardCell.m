@@ -10,6 +10,7 @@
 #import "WBSpringBoardDefines.h"
 #import <Masonry/Masonry.h>
 #import "NSBundle+SpringBoard.h"
+#import <Foundation/Foundation.h>
 
 @interface WBSpringBoardCell ()
 
