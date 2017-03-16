@@ -10,10 +10,14 @@
 
 @interface WBSpringBoardPopupView : UIControl
 
+@property (nonatomic, copy) void (^maskClickBlock)(void);
+
 @property (nonatomic, readonly) UIView *contentView;
 @property (nonatomic, assign) BOOL isEdit;
 
-- (void)setTitle:(NSString *)title;
+@property (nonatomic, copy) NSString *originTitle;
+@property (nonatomic, readonly) NSString *currentTitle;
+
 - (void)hideWithAnimated:(BOOL)animated removeFromSuperView:(BOOL)remove;
 
 @end

@@ -30,7 +30,7 @@
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex;
 - (void)springBoardView:(WBSpringBoardView *)springBoardView removeItemAtIndex:(NSInteger)index;
 
-- (void)springBoardView:(WBSpringBoardView *)springBoardView combinedCell:(__kindof WBSpringBoardCombinedCell *)combinedCell changeLabel:(NSString *)newLabel;
+- (void)springBoardView:(WBSpringBoardView *)springBoardView combinedCell:(__kindof WBSpringBoardCombinedCell *)combinedCell changeTitleFrom:(NSString *)originTitle to:(NSString *)currentTitle;
 - (void)springBoardView:(WBSpringBoardView *)springBoardView needRefreshCombinedCell:(__kindof WBSpringBoardCombinedCell *)combinedCell;
 
 @end

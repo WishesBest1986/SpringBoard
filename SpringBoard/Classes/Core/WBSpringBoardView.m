@@ -82,9 +82,20 @@
     
     WBSpringBoardPopupView *popupView = [[WBSpringBoardPopupView alloc] init];
     [popupView.contentView addSubview:innerView];
+    popupView.originTitle = cell.label.text;
     popupView.isEdit = self.isEdit;
-    [popupView setTitle:cell.label.text];
     innerView.popupView = popupView;
+    popupView.maskClickBlock = ^(void) {
+        NSString *originTitle = popupView.originTitle;
+        NSString *currentTitle = popupView.currentTitle;
+        if ((currentTitle && currentTitle.length > 0) && ![originTitle isEqualToString:currentTitle]) {
+            if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:combinedCell:changeTitleFrom:to:)]) {
+                [_springBoardDataSource springBoardView:weakself combinedCell:cell changeTitleFrom:originTitle to:currentTitle];
+            }
+        }
+        
+        [popupView hideWithAnimated:YES removeFromSuperView:YES];
+    };
     [innerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(innerView.superview);
     }];
@@ -107,9 +118,27 @@
     self.isEdit = edit;
 }
 
-- (void)verifyNecessityOfCombinedCell:(WBSpringBoardCombinedCell *)combinedCell
+- (void)afterGestureCheckSpringBoardInnerView:(WBSpringBoardInnerView *)springBoardInnerView
 {
     @WBWeakObj(self);
+    WBSpringBoardCombinedCell *combinedCell = springBoardInnerView.superCell;
+    if ([self verifyNecessityOfCombinedCell:combinedCell]) {
+        // check whether title changed
+        WBSpringBoardPopupView *popupView = springBoardInnerView.popupView;
+        NSString *originTitle = popupView.originTitle;
+        NSString *currentTitle = popupView.currentTitle;
+        if ((currentTitle && currentTitle.length > 0) && ![originTitle isEqualToString:currentTitle]) {
+            if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:combinedCell:changeTitleFrom:to:)]) {
+                [_springBoardDataSource springBoardView:weakself combinedCell:combinedCell changeTitleFrom:originTitle to:currentTitle];
+            }
+        }
+    }
+}
+
+- (BOOL)verifyNecessityOfCombinedCell:(WBSpringBoardCombinedCell *)combinedCell
+{
+    @WBWeakObj(self);
+    BOOL necessary = YES;
     NSInteger superIndex = [self indexForCell:combinedCell];
     
     NSInteger numberOfItems = 0;
@@ -125,6 +154,8 @@
         [combinedCell removeFromSuperview];
         [self.contentCellArray removeObjectAtIndex:superIndex];
         [self recomputePageAndSortContentCellsWithAnimated:YES];
+        
+        necessary = NO;
     }
     
     if (numberOfItems == 1 && !_allowSingleItemCombinedCell) {
@@ -149,7 +180,11 @@
         cell.longGestureDelegate = self;
         
         [self recomputePageAndSortContentCellsWithAnimated:YES];
+        
+        necessary = NO;
     }
+    
+    return necessary;
 }
 
 #pragma mark - WBSpringBoardComponentDelegate Method
@@ -268,7 +303,7 @@
     
     cell.delegate = self;
     cell.longGestureDelegate = self;
-    [self verifyNecessityOfCombinedCell:springBoardInnerView.superCell];
+    [self afterGestureCheckSpringBoardInnerView:springBoardInnerView];
 }
 
 - (void)springBoardInnerView:(WBSpringBoardInnerView *)springBoardInnerView outsideGestureCancel:(UILongPressGestureRecognizer *)gesture fromCell:(WBSpringBoardCell *)cell
@@ -277,7 +312,7 @@
     
     cell.delegate = self;
     cell.longGestureDelegate = self;
-    [self verifyNecessityOfCombinedCell:springBoardInnerView.superCell];
+    [self afterGestureCheckSpringBoardInnerView:springBoardInnerView];
 }
 
 @end

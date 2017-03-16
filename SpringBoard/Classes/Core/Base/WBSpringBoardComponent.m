@@ -403,7 +403,6 @@
     _dragFromIndex = [self indexForCell:cell];
     
     UIView *dragView = [self dragViewWithCell:cell];
-    dragView.backgroundColor = [UIColor redColor];
     [UIView animateWithDuration:kAnimationDuration animations:^{
         dragView.transform = CGAffineTransformMakeScale(kDragScaleFactor, kDragScaleFactor);
         dragView.alpha = 0.8;

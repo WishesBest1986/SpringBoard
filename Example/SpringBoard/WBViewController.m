@@ -40,10 +40,12 @@
     
     _springBoardView.springBoardDelegate = self;
     _springBoardView.springBoardDataSource = self;
+    _springBoardView.layout.itemSize = CGSizeMake(90, 90);
     _springBoardView.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
-    _springBoardView.layout.minimumHorizontalSpace = 5;
+    _springBoardView.layout.minimumHorizontalSpace = 20;
     _springBoardView.allowSingleItemCombinedCell = NO;
     
+    _springBoardView.innerViewLayout.itemSize = CGSizeMake(90, 90);
     _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 25, 5);
     _springBoardView.innerViewLayout.minimumHorizontalSpace = 5;
 }
@@ -199,9 +201,13 @@
     NSLog(@"%@", _dataArray);
 }
 
-- (void)springBoardView:(WBSpringBoardView *)springBoardView combinedCell:(WBCustomerCombinedCell *)combinedCell changeLabel:(NSString *)newLabel
+- (void)springBoardView:(WBSpringBoardView *)springBoardView combinedCell:(WBCustomerCombinedCell *)combinedCell changeTitleFrom:(NSString *)originTitle to:(NSString *)currentTitle
 {
-    NSLog(@"LABEL %@ Change to %@", combinedCell.label.text, newLabel);
+    NSInteger index = [springBoardView indexForCell:combinedCell];
+    NSLog(@"should update data at index: %ld", index);
+    
+    NSLog(@"LABEL %@ Change to %@", originTitle, currentTitle);
+    combinedCell.label.text = currentTitle;
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView needRefreshCombinedCell:(WBCustomerCombinedCell *)combinedCell

@@ -14,6 +14,7 @@
 
 @property (nonatomic, weak) UIView *inputView;
 @property (nonatomic, weak) UITextField *textField;
+@property (nonatomic, weak) UILabel *label;
 
 @end
 
@@ -44,14 +45,23 @@
         textField.textAlignment = NSTextAlignmentCenter;
         textField.returnKeyType = UIReturnKeyDone;
         textField.delegate = self;
+        textField.hidden = YES;
         [inputView addSubview:textField];
         _textField = textField;
         [textField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(inputView);
-            make.width.mas_equalTo(inputView).multipliedBy(0.6);
+            make.width.mas_equalTo(inputView).multipliedBy(0.8);
             make.height.mas_equalTo(40);
         }];
         
+        UILabel *label = [[UILabel alloc] init];
+        label.font = [UIFont systemFontOfSize:30];
+        label.textAlignment = NSTextAlignmentCenter;
+        [inputView addSubview:label];
+        _label = label;
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(textField);
+        }];
         
         UIView *contentView = [[UIView alloc] init];
         contentView.backgroundColor = [UIColor whiteColor];
@@ -88,18 +98,37 @@
 
 - (void)setIsEdit:(BOOL)isEdit
 {
-    _isEdit = isEdit;
+    if (_isEdit != isEdit) {
+        _isEdit = isEdit;
+
+        if (isEdit) {
+            _textField.text = _label.text;
+        } else {
+            if (_textField.text.length > 0) {
+                _label.text = _textField.text;
+            }
+            [_textField resignFirstResponder];
+        }
+    }
     
-    _textField.enabled = isEdit;
-    _textField.borderStyle = isEdit ? UITextBorderStyleRoundedRect : UITextBorderStyleNone;
+    _textField.hidden = !isEdit;
+    _label.hidden = isEdit;
+}
+
+- (void)setOriginTitle:(NSString *)originTitle
+{
+    _originTitle = originTitle;
+
+    _textField.text = originTitle;
+    _label.text = originTitle;
+}
+
+- (NSString *)currentTitle
+{
+    return _textField.text;
 }
 
 #pragma mark - Public Method
-
-- (void)setTitle:(NSString *)title
-{
-    _textField.text = title;
-}
 
 - (void)hideWithAnimated:(BOOL)animated removeFromSuperView:(BOOL)remove
 {
@@ -116,7 +145,11 @@
 
 - (void)clickAction:(id)sender
 {
-    [self hideWithAnimated:YES removeFromSuperView:YES];
+    if (_maskClickBlock) {
+        _maskClickBlock();
+    } else {
+        [self hideWithAnimated:YES removeFromSuperView:YES];
+    }
 }
 
 - (void)innerViewEditChangedNotification:(NSNotification *)notification
