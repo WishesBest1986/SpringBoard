@@ -24,8 +24,10 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		F443173D1E7A68CE00A624AD /* WBCustomerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F443173A1E7A68CE00A624AD /* WBCustomerCell.m */; };
-		F443173E1E7A68CE00A624AD /* WBCustomerCombinedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F443173C1E7A68CE00A624AD /* WBCustomerCombinedCell.m */; };
+		F44317451E7A760E00A624AD /* WBCustomerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F44317421E7A760E00A624AD /* WBCustomerCell.m */; };
+		F44317461E7A760E00A624AD /* WBCustomerCombinedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F44317441E7A760E00A624AD /* WBCustomerCombinedCell.m */; };
+		F44317491E7A762A00A624AD /* WBFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F44317481E7A762A00A624AD /* WBFileInfo.m */; };
+		F443174C1E7A763500A624AD /* WBFolderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F443174B1E7A763500A624AD /* WBFolderInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,10 +71,14 @@
 		91C20486F34771CBC73F4BC2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9807109EBF0EEF36D4B2711D /* Pods-SpringBoard_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpringBoard_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-SpringBoard_Example/Pods-SpringBoard_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A182479EE2530617212E6A8D /* Pods_SpringBoard_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpringBoard_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F44317391E7A68CE00A624AD /* WBCustomerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCell.h; sourceTree = "<group>"; };
-		F443173A1E7A68CE00A624AD /* WBCustomerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCell.m; sourceTree = "<group>"; };
-		F443173B1E7A68CE00A624AD /* WBCustomerCombinedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCombinedCell.h; sourceTree = "<group>"; };
-		F443173C1E7A68CE00A624AD /* WBCustomerCombinedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCombinedCell.m; sourceTree = "<group>"; };
+		F44317411E7A760E00A624AD /* WBCustomerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCell.h; sourceTree = "<group>"; };
+		F44317421E7A760E00A624AD /* WBCustomerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCell.m; sourceTree = "<group>"; };
+		F44317431E7A760E00A624AD /* WBCustomerCombinedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBCustomerCombinedCell.h; sourceTree = "<group>"; };
+		F44317441E7A760E00A624AD /* WBCustomerCombinedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBCustomerCombinedCell.m; sourceTree = "<group>"; };
+		F44317471E7A762A00A624AD /* WBFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBFileInfo.h; sourceTree = "<group>"; };
+		F44317481E7A762A00A624AD /* WBFileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBFileInfo.m; sourceTree = "<group>"; };
+		F443174A1E7A763500A624AD /* WBFolderInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBFolderInfo.h; sourceTree = "<group>"; };
+		F443174B1E7A763500A624AD /* WBFolderInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBFolderInfo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +144,8 @@
 		6003F593195388D20070C39A /* Example for SpringBoard */ = {
 			isa = PBXGroup;
 			children = (
+				F443173F1E7A760E00A624AD /* Model */,
+				F44317401E7A760E00A624AD /* UI */,
 				6003F59C195388D20070C39A /* WBAppDelegate.h */,
 				6003F59D195388D20070C39A /* WBAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
@@ -146,10 +154,6 @@
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
-				F44317391E7A68CE00A624AD /* WBCustomerCell.h */,
-				F443173A1E7A68CE00A624AD /* WBCustomerCell.m */,
-				F443173B1E7A68CE00A624AD /* WBCustomerCombinedCell.h */,
-				F443173C1E7A68CE00A624AD /* WBCustomerCombinedCell.m */,
 			);
 			name = "Example for SpringBoard";
 			path = SpringBoard;
@@ -204,6 +208,28 @@
 				73C4B72F5A26CDF4065AE142 /* Pods-SpringBoard_Tests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		F443173F1E7A760E00A624AD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F44317471E7A762A00A624AD /* WBFileInfo.h */,
+				F44317481E7A762A00A624AD /* WBFileInfo.m */,
+				F443174A1E7A763500A624AD /* WBFolderInfo.h */,
+				F443174B1E7A763500A624AD /* WBFolderInfo.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F44317401E7A760E00A624AD /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F44317411E7A760E00A624AD /* WBCustomerCell.h */,
+				F44317421E7A760E00A624AD /* WBCustomerCell.m */,
+				F44317431E7A760E00A624AD /* WBCustomerCombinedCell.h */,
+				F44317441E7A760E00A624AD /* WBCustomerCombinedCell.m */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -408,10 +434,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F443173E1E7A68CE00A624AD /* WBCustomerCombinedCell.m in Sources */,
+				F443174C1E7A763500A624AD /* WBFolderInfo.m in Sources */,
+				F44317461E7A760E00A624AD /* WBCustomerCombinedCell.m in Sources */,
 				6003F59E195388D20070C39A /* WBAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* WBViewController.m in Sources */,
-				F443173D1E7A68CE00A624AD /* WBCustomerCell.m in Sources */,
+				F44317451E7A760E00A624AD /* WBCustomerCell.m in Sources */,
+				F44317491E7A762A00A624AD /* WBFileInfo.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

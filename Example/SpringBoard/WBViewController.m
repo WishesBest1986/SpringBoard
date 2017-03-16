@@ -10,6 +10,8 @@
 #import <SpringBoard/SpringBoard.h>
 #import "WBCustomerCell.h"
 #import "WBCustomerCombinedCell.h"
+#import "WBFileInfo.h"
+#import "WBFolderInfo.h"
 
 @interface WBViewController () <WBSpringBoardViewDelegate, WBSpringBoardViewDataSource>
 
@@ -28,14 +30,25 @@
     
     _dataArray = [NSMutableArray array];
     for (int i = 0; i < 70; i ++) {
+        WBFileInfo *fileInfo = [[WBFileInfo alloc] init];
+        fileInfo.name = [NSString stringWithFormat:@"文件%d", i];
+        fileInfo.iconName = [NSString stringWithFormat:@"%d", i];
+        [_dataArray addObject:fileInfo];
+        
         if (i == 2) {
+            WBFolderInfo *folderInfo = [[WBFolderInfo alloc] init];
+            folderInfo.name = [NSString stringWithFormat:@"文件夹%d", i];
+            
             NSMutableArray *marr = [NSMutableArray array];
             for (int j = 0; j < 10; j ++) {
-                [marr addObject:[NSString stringWithFormat:@"c%d", j]];
+                WBFileInfo *fileInfo = [[WBFileInfo alloc] init];
+                fileInfo.name = [NSString stringWithFormat:@"内文件%d", j];
+                fileInfo.iconName = [NSString stringWithFormat:@"inner%d", j];
+                [marr addObject:fileInfo];
             }
-            [_dataArray addObject:marr];
+            folderInfo.fileArray = marr;
+            [_dataArray addObject:folderInfo];
         }
-        [_dataArray addObject:[NSString stringWithFormat:@"%d", i]];
     }
     
     _springBoardView.springBoardDelegate = self;
@@ -56,19 +69,26 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Private Method
+
+- (void)modelChangedHandler
+{
+    NSLog(@"MODEL CHANGED: %@", _dataArray);
+}
+
 #pragma mark - WBSpringBoardViewDelegate Method
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView clickItemAtIndex:(NSInteger)index
 {
-    NSString *data = _dataArray[index];
-    NSLog(@"clicked data %@", data);
+    WBFileInfo *file = _dataArray[index];
+    NSLog(@"clicked File %@", file.name);
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView clickSubItemAtIndex:(NSInteger)index withSuperIndex:(NSInteger)superIndex
 {
-    NSArray *superData = _dataArray[superIndex];
-    NSString *data = superData[index];
-    NSLog(@"clicked data %@", data);
+    WBFolderInfo *folder = _dataArray[superIndex];
+    WBFileInfo *file = folder.fileArray[index];
+    NSLog(@"clicked File %@", file.name);
 }
 
 #pragma mark - WBSpringBoardViewDataSource Method
@@ -83,16 +103,18 @@
     id data = _dataArray[index];
     
     WBSpringBoardCell *cell = nil;
-    if ([data isKindOfClass:NSString.class]) {
+    if ([data isKindOfClass:WBFileInfo.class]) {
+        WBFileInfo *file = data;
         WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
-        customerCell.imageView.image = [UIImage imageNamed:data];
-        customerCell.label.text = (NSString *)data;
+        customerCell.imageView.image = [UIImage imageNamed:file.iconName];
+        customerCell.label.text = file.name;
         
         cell = customerCell;
-    } else if ([data isKindOfClass:NSArray.class]) {
+    } else if ([data isKindOfClass:WBFolderInfo.class]) {
+        WBFolderInfo *folder = data;
         WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
-        customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-        [customerCombinedCell refreshSubImageNames:data];
+        customerCombinedCell.label.text = folder.name;
+        [customerCombinedCell refreshSubImageNames:[folder fileIconNameArray]];
         
         cell = customerCombinedCell;
     }
@@ -103,8 +125,8 @@
 - (NSInteger)springBoardView:(WBSpringBoardView *)springBoardView numberOfSubItemsAtIndex:(NSInteger)index
 {
     id superData = _dataArray[index];
-    if ([superData isKindOfClass:NSArray.class]) {
-        return ((NSArray *)superData).count;
+    if ([superData isKindOfClass:WBFolderInfo.class]) {
+        return ((WBFolderInfo *)superData).fileArray.count;
     }
     return 0;
 }
@@ -114,22 +136,17 @@
     WBSpringBoardCell *cell = nil;
 
     id superData = _dataArray[superIndex];
-    if ([superData isKindOfClass:NSArray.class]) {
-        NSArray *dataArr = superData;
-        id data = dataArr[index];
+    if ([superData isKindOfClass:WBFolderInfo.class]) {
+        WBFolderInfo *folder = superData;
+        id data = folder.fileArray[index];
         
-        if ([data isKindOfClass:NSString.class]) {
+        if ([data isKindOfClass:WBFileInfo.class]) {
+            WBFileInfo *file = data;
             WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
-            customerCell.imageView.image = [UIImage imageNamed:data];
-            customerCell.label.text = (NSString *)data;
+            customerCell.imageView.image = [UIImage imageNamed:file.iconName];
+            customerCell.label.text = file.name;
             
             cell = customerCell;
-        } else if ([data isKindOfClass:NSArray.class]) {
-            WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
-            customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-            [customerCombinedCell refreshSubImageNames:data];
-            
-            cell = customerCombinedCell;
         }
     }
     
@@ -138,78 +155,89 @@
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
 {
-    NSString *data = _dataArray[sourceIndex];
+    id data = _dataArray[sourceIndex];
     [_dataArray removeObjectAtIndex:sourceIndex];
     [_dataArray insertObject:data atIndex:destinationIndex];
     
-    NSLog(@"%@", _dataArray);
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView combineItemAtIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destinationIndex
 {
-    NSString *sourceData = _dataArray[sourceIndex];
+    WBFileInfo *sourceData = _dataArray[sourceIndex];
     id destinationData = _dataArray[destinationIndex];
     
-    NSMutableArray *combinedData = [@[sourceData] mutableCopy];
-    if ([destinationData isKindOfClass:[NSString class]]) {
-        [combinedData addObject:destinationData];
-    } else if ([destinationData isKindOfClass:[NSArray class]]) {
-        [combinedData addObjectsFromArray:destinationData];
+    WBFolderInfo *folder = [[WBFolderInfo alloc] init];
+    if ([destinationData isKindOfClass:[WBFileInfo class]]) {
+        folder.name = @"文件夹";
+        folder.fileArray = @[destinationData, sourceData];
+    } else if ([destinationData isKindOfClass:[WBFolderInfo class]]) {
+        WBFolderInfo *oldFolder = destinationData;
+        folder.name = oldFolder.name;
+        folder.fileArray = [oldFolder.fileArray arrayByAddingObject:sourceData];
     }
     
-    [_dataArray replaceObjectAtIndex:destinationIndex withObject:combinedData];
+    [_dataArray replaceObjectAtIndex:destinationIndex withObject:folder];
     [_dataArray removeObjectAtIndex:sourceIndex];
     
-    NSLog(@"%@", _dataArray);
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSubIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
 {
-    NSMutableArray *superDataArray = _dataArray[superIndex];
+    WBFolderInfo *folder = _dataArray[superIndex];
+    NSMutableArray *mFileArray = [NSMutableArray arrayWithArray:folder.fileArray];
     
-    NSString *data = superDataArray[sourceIndex];
-    [superDataArray removeObjectAtIndex:sourceIndex];
-    [superDataArray insertObject:data atIndex:destinationIndex];
+    WBFileInfo *data = mFileArray[sourceIndex];
+    [mFileArray removeObjectAtIndex:sourceIndex];
+    [mFileArray insertObject:data atIndex:destinationIndex];
+    folder.fileArray = mFileArray;
     
-    _dataArray[superIndex] = superDataArray;
+//    _dataArray[superIndex] = superDataArray;
     
-    NSLog(@"%@", _dataArray);
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView moveSubItemAtIndex:(NSInteger)sourceIndex toSuperIndex:(NSInteger)destinationIndex withSuperIndex:(NSInteger)superIndex
 {
-    NSMutableArray *superDataArray = _dataArray[superIndex];
-    NSString *subData = superDataArray[sourceIndex];
-    [superDataArray removeObjectAtIndex:sourceIndex];
+    WBFolderInfo *folder = _dataArray[superIndex];
+    WBFileInfo *file = folder.fileArray[sourceIndex];
+    NSMutableArray *mFileArray = [NSMutableArray arrayWithArray:folder.fileArray];
+    [mFileArray removeObjectAtIndex:sourceIndex];
+    folder.fileArray = mFileArray;
 
-    _dataArray[superIndex] = superDataArray;
-    [_dataArray insertObject:subData atIndex:destinationIndex];
+//    _dataArray[superIndex] = superDataArray;
+    [_dataArray insertObject:file atIndex:destinationIndex];
     
-    NSLog(@"%@", _dataArray);
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView removeItemAtIndex:(NSInteger)index
 {
     [_dataArray removeObjectAtIndex:index];
     
-    NSLog(@"%@", _dataArray);
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView combinedCell:(WBCustomerCombinedCell *)combinedCell changeTitleFrom:(NSString *)originTitle to:(NSString *)currentTitle
 {
     NSInteger index = [springBoardView indexForCell:combinedCell];
+    WBFolderInfo *folder = _dataArray[index];
+    folder.name = currentTitle;
     NSLog(@"should update data at index: %ld", index);
     
     NSLog(@"LABEL %@ Change to %@", originTitle, currentTitle);
     combinedCell.label.text = currentTitle;
+    
+    [self modelChangedHandler];
 }
 
 - (void)springBoardView:(WBSpringBoardView *)springBoardView needRefreshCombinedCell:(WBCustomerCombinedCell *)combinedCell
 {
     NSInteger index = [springBoardView indexForCell:combinedCell];
-    NSArray *data = _dataArray[index];
-    combinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-    [combinedCell refreshSubImageNames:data];
+    WBFolderInfo *folder = _dataArray[index];
+    combinedCell.label.text = folder.name;
+    [combinedCell refreshSubImageNames:[folder fileIconNameArray]];
 }
 
 @end
