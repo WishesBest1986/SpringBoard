@@ -85,17 +85,14 @@
     WBSpringBoardCell *cell = nil;
     if ([data isKindOfClass:NSString.class]) {
         WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
+        customerCell.imageView.image = [UIImage imageNamed:data];
         customerCell.label.text = (NSString *)data;
         
         cell = customerCell;
     } else if ([data isKindOfClass:NSArray.class]) {
         WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
         customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-        NSMutableArray *imageArray = [NSMutableArray array];
-        for (NSInteger i = 0; i < ((NSArray *)data).count; i ++) {
-            [imageArray addObject:[UIImage imageNamed:@"file"]];
-        }
-        [customerCombinedCell refreshSubImages:imageArray];
+        [customerCombinedCell refreshSubImageNames:data];
         
         cell = customerCombinedCell;
     }
@@ -123,17 +120,14 @@
         
         if ([data isKindOfClass:NSString.class]) {
             WBCustomerCell *customerCell = [[WBCustomerCell alloc] init];
+            customerCell.imageView.image = [UIImage imageNamed:data];
             customerCell.label.text = (NSString *)data;
             
             cell = customerCell;
         } else if ([data isKindOfClass:NSArray.class]) {
             WBCustomerCombinedCell *customerCombinedCell = [[WBCustomerCombinedCell alloc] init];
             customerCombinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-            NSMutableArray *imageArray = [NSMutableArray array];
-            for (NSInteger i = 0; i < ((NSArray *)data).count; i ++) {
-                [imageArray addObject:[UIImage imageNamed:@"file"]];
-            }
-            [customerCombinedCell refreshSubImages:imageArray];
+            [customerCombinedCell refreshSubImageNames:data];
             
             cell = customerCombinedCell;
         }
@@ -215,11 +209,7 @@
     NSInteger index = [springBoardView indexForCell:combinedCell];
     NSArray *data = _dataArray[index];
     combinedCell.label.text = [((NSArray *)data) componentsJoinedByString:@","];
-    NSMutableArray *imageArray = [NSMutableArray array];
-    for (NSInteger i = 0; i < ((NSArray *)data).count; i ++) {
-        [imageArray addObject:[UIImage imageNamed:@"file"]];
-    }
-    [combinedCell refreshSubImages:imageArray];
+    [combinedCell refreshSubImageNames:data];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "WBSpringBoardCell.h"
 #import "WBSpringBoardDefines.h"
 #import <Masonry/Masonry.h>
+#import "NSBundle+SpringBoard.h"
 
 @interface WBSpringBoardCell ()
 
@@ -49,7 +50,7 @@
         [self addSubview:bottomSpaceView];
         
         UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.image = [UIImage imageNamed:@"file"];
+        imageView.image = [NSBundle wb_icoImage];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.layer.cornerRadius = kImageViewCornerRadius;
         imageView.layer.masksToBounds = YES;
@@ -89,8 +90,30 @@
             make.bottom.mas_equalTo(self);
             make.centerX.mas_equalTo(self);
         }];
+        
+        // process set nil image problems
+        [_imageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [_imageView removeObserver:self forKeyPath:@"image"];
+}
+
+#pragma mark - Override Method
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"image"]) {
+        UIImage *image = [change valueForKey:NSKeyValueChangeNewKey];
+        if (![image isKindOfClass:[UIImage class]]) {
+            _imageView.image = [NSBundle wb_icoImage];
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 #pragma mark - Setter & Getter

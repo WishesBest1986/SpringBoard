@@ -9,6 +9,7 @@
 #import "WBSpringBoardCombinedCell.h"
 #import <Masonry/Masonry.h>
 #import "WBSpringBoardDefines.h"
+#import "NSBundle+SpringBoard.h"
 
 @interface WBSpringBoardCombinedCell ()
 
@@ -72,6 +73,19 @@
         }
     }
     return self;
+}
+
+- (void)refreshSubImageNames:(NSArray<NSString *> *)imageNameArray
+{
+    NSMutableArray<UIImage *> *imageArray = [NSMutableArray array];
+    for (NSString *imageName in imageNameArray) {
+        UIImage *image = [UIImage imageNamed:imageName];
+        if (!image) {
+            image = [NSBundle wb_icoImage];
+        }
+        [imageArray addObject:image];
+    }
+    [self refreshSubImages:imageArray];
 }
 
 - (void)refreshSubImages:(NSArray<UIImage *> *)imageArray

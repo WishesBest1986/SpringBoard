@@ -19,6 +19,11 @@
     "ios": "8.0"
   },
   "source_files": "SpringBoard/Classes/**/*",
+  "resource_bundles": {
+    "SpringBoard": [
+      "SpringBoard/Assets/*"
+    ]
+  },
   "dependencies": {
     "Masonry": [
       "~> 1.0.2"

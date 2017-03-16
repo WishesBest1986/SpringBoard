@@ -35,6 +35,9 @@ SpringBoard Project is aim to implement iOS Desktop SpringBoard.
   # s.resource_bundles = {
   #   'SpringBoard' => ['SpringBoard/Assets/*.png']
   # }
+  s.resource_bundles = {
+    'SpringBoard' => ['SpringBoard/Assets/**/*']
+  }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

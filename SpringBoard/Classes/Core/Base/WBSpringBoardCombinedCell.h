@@ -12,6 +12,7 @@
 
 @property (nonatomic, readonly) UIView *directoryView;
 
+- (void)refreshSubImageNames:(NSArray<NSString *> *)imageNameArray;
 - (void)refreshSubImages:(NSArray<UIImage *> *)imageArray;
 
 @end
