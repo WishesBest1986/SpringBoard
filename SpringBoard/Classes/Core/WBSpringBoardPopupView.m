@@ -145,8 +145,9 @@
 
 - (void)clickAction:(id)sender
 {
+    @WBWeakObj(self);
     if (_maskClickBlock) {
-        _maskClickBlock();
+        _maskClickBlock(weakself);
     } else {
         [self hideWithAnimated:YES removeFromSuperView:YES];
     }

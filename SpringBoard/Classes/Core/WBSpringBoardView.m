@@ -85,7 +85,7 @@
     popupView.originTitle = cell.label.text;
     popupView.isEdit = self.isEdit;
     innerView.popupView = popupView;
-    popupView.maskClickBlock = ^(void) {
+    popupView.maskClickBlock = ^(WBSpringBoardPopupView *popupView) {
         NSString *originTitle = popupView.originTitle;
         NSString *currentTitle = popupView.currentTitle;
         if ((currentTitle && currentTitle.length > 0) && ![originTitle isEqualToString:currentTitle]) {

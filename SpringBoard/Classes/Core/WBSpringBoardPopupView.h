@@ -10,7 +10,7 @@
 
 @interface WBSpringBoardPopupView : UIControl
 
-@property (nonatomic, copy) void (^maskClickBlock)(void);
+@property (nonatomic, copy) void (^maskClickBlock)(WBSpringBoardPopupView *popupView);
 
 @property (nonatomic, readonly) UIView *contentView;
 @property (nonatomic, assign) BOOL isEdit;
