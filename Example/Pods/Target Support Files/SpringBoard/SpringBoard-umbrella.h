@@ -11,6 +11,7 @@
 #import "WBSpringBoardInnerView.h"
 #import "WBSpringBoardPopupView.h"
 #import "WBSpringBoardView.h"
+#import "NSBundle+SpringBoard.h"
 #import "UIView+Layout.h"
 #import "WBSpringBoardDefines.h"
 #import "SpringBoard.h"

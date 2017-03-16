@@ -1,6 +1,6 @@
 {
   "name": "SpringBoard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Follow iOS Desktop SpringBoard",
   "description": "SpringBoard Project is aim to implement iOS Desktop SpringBoard.",
   "homepage": "https://github.com/WishesBest1986/SpringBoard.git",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/WishesBest1986/SpringBoard.git",
-    "tag": "0.1.0"
+    "tag": "0.2.0"
   },
   "platforms": {
     "ios": "8.0"
@@ -21,7 +21,7 @@
   "source_files": "SpringBoard/Classes/**/*",
   "resource_bundles": {
     "SpringBoard": [
-      "SpringBoard/Assets/*"
+      "SpringBoard/Assets/**/*"
     ]
   },
   "dependencies": {
