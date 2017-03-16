@@ -117,6 +117,9 @@
     
     _pageControl.numberOfPages = _pages;
     _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
+    if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+        _pageControl.currentPage = MIN(round(_scrollView.contentOffset.y / _scrollView.bounds.size.height), _pages);
+    }
 }
 
 - (void)computePages
@@ -241,6 +244,9 @@
     
     _pageControl.numberOfPages = _pages;
     _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
+    if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+        _pageControl.currentPage = MIN(round(_scrollView.contentOffset.y / _scrollView.bounds.size.height), _pages);
+    }
     
     [self sortContentCellsWithAnimated:animated];
 }
@@ -272,20 +278,39 @@
 {
     CGPoint scrollPoint = _currentMovePointAtScrollView;
     
-    CGRect scrollViewLeftSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
-    CGRect scrollViewRightSideRect = CGRectMake(_scrollView.contentOffset.x + CGRectGetWidth(_scrollView.frame) - kScrollViewDragBoundaryThreshold, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
-    
-    if (CGRectContainsPoint(scrollViewLeftSideRect, scrollPoint)) {
-        if (_pageControl.currentPage > 0) {
-            _pageControl.currentPage -= 1;
-            CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
-            [_scrollView setContentOffset:offset animated:YES];
+    if (_layout.scrollDirection == WBSpringBoardScrollDirectionHorizontal) {
+        CGRect scrollViewLeftSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
+        CGRect scrollViewRightSideRect = CGRectMake(_scrollView.contentOffset.x + CGRectGetWidth(_scrollView.frame) - kScrollViewDragBoundaryThreshold, _scrollView.contentOffset.y, kScrollViewDragBoundaryThreshold, CGRectGetHeight(_scrollView.frame));
+        
+        if (CGRectContainsPoint(scrollViewLeftSideRect, scrollPoint)) {
+            if (_pageControl.currentPage > 0) {
+                _pageControl.currentPage -= 1;
+                CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
+                [_scrollView setContentOffset:offset animated:YES];
+            }
+        } else if (CGRectContainsPoint(scrollViewRightSideRect, scrollPoint)) {
+            if (_pageControl.currentPage < _pageControl.numberOfPages - 1) {
+                _pageControl.currentPage += 1;
+                CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
+                [_scrollView setContentOffset:offset animated:YES];
+            }
         }
-    } else if (CGRectContainsPoint(scrollViewRightSideRect, scrollPoint)) {
-        if (_pageControl.currentPage < _pageControl.numberOfPages - 1) {
-            _pageControl.currentPage += 1;
-            CGPoint offset = CGPointMake(_pageControl.currentPage * CGRectGetWidth(_scrollView.frame), 0);
-            [_scrollView setContentOffset:offset animated:YES];
+    } else if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+        CGRect scrollViewTopSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y, CGRectGetWidth(_scrollView.frame), kScrollViewDragBoundaryThreshold);
+        CGRect scrollViewBottomSideRect = CGRectMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y + CGRectGetHeight(_scrollView.frame) - kScrollViewDragBoundaryThreshold, CGRectGetWidth(_scrollView.frame), kScrollViewDragBoundaryThreshold);
+        
+        if (CGRectContainsPoint(scrollViewTopSideRect, scrollPoint)) {
+            if (_pageControl.currentPage > 0) {
+                _pageControl.currentPage -= 1;
+                CGPoint offset = CGPointMake(0, _pageControl.currentPage * CGRectGetHeight(_scrollView.frame));
+                [_scrollView setContentOffset:offset animated:YES];
+            }
+        } else if (CGRectContainsPoint(scrollViewBottomSideRect, scrollPoint)) {
+            if (_pageControl.currentPage < _pageControl.numberOfPages - 1) {
+                _pageControl.currentPage += 1;
+                CGPoint offset = CGPointMake(0, _pageControl.currentPage * CGRectGetHeight(_scrollView.frame));
+                [_scrollView setContentOffset:offset animated:YES];
+            }
         }
     }
 }
