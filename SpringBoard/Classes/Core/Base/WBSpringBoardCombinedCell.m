@@ -35,7 +35,7 @@
         directoryView.backgroundColor = [UIColor lightGrayColor];
         directoryView.layer.cornerRadius = kViewCornerRadius;
         directoryView.userInteractionEnabled = NO;
-        [self addSubview:directoryView];
+        [self.contentView addSubview:directoryView];
         _directoryView = directoryView;
         [directoryView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.imageView);

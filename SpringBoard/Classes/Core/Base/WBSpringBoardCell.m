@@ -23,6 +23,8 @@
 #define kImageViewSize CGSizeMake(70, 70)
 #define kImageViewCornerRadius 10
 #define kLabelFontSize 12
+#define kLabelPaddingTop 2
+#define kLabelWidthOffset 10
 
 #define kViewScaleFactor 1.2
 
@@ -37,59 +39,54 @@
         _longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGestureAction:)];
         [self addGestureRecognizer:_longGesture];
         
+        UIView *contentView = [UIView new];
+        contentView.backgroundColor = [UIColor clearColor];
+        contentView.userInteractionEnabled = NO;
+        [self addSubview:contentView];
+        _contentView = contentView;
+        
         UIView *directoryHolderView = [[UIView alloc] initWithFrame:CGRectZero];
         directoryHolderView.backgroundColor = [UIColor lightGrayColor];
         directoryHolderView.layer.cornerRadius = kImageViewCornerRadius;
         directoryHolderView.userInteractionEnabled = NO;
         directoryHolderView.hidden = YES;
-        [self addSubview:directoryHolderView];
+        [contentView addSubview:directoryHolderView];
         _directoryHolderView = directoryHolderView;
-        
-        UIView *topSpaceView = [UIView new];
-        UIView *bottomSpaceView = [UIView new];
-        [self addSubview:topSpaceView];
-        [self addSubview:bottomSpaceView];
         
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.image = [NSBundle wb_icoImage];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.layer.cornerRadius = kImageViewCornerRadius;
         imageView.layer.masksToBounds = YES;
-        [self addSubview:imageView];
+        [contentView addSubview:imageView];
         _imageView = imageView;
         
         UILabel *label = [[UILabel alloc] init];
         label.font = [UIFont systemFontOfSize:kLabelFontSize];
-        [self addSubview:label];
+        [contentView addSubview:label];
         _label = label;
+        
+        [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self);
+            make.width.mas_equalTo(imageView);
+            make.bottom.mas_equalTo(label);
+        }];
         
         [directoryHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(imageView);
         }];
         
-        [topSpaceView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self);
-            make.height.mas_equalTo(bottomSpaceView);
-            make.centerX.mas_equalTo(self);
-        }];
-        
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self);
+            make.centerX.mas_equalTo(contentView);
+            make.top.mas_equalTo(contentView);
             make.size.mas_equalTo(kImageViewSize);
-            make.top.mas_equalTo(topSpaceView.mas_bottom);
         }];
 
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.width.mas_lessThanOrEqualTo(imageView).offset(10);
+            make.top.mas_equalTo(imageView.mas_bottom).offset(kLabelPaddingTop);
+            make.width.mas_lessThanOrEqualTo(imageView).offset(-1 * kLabelWidthOffset);
             make.height.mas_equalTo(label.font.lineHeight);
-            make.top.mas_equalTo(imageView.mas_bottom).offset(2);
-        }];
-        
-        [bottomSpaceView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(label.mas_bottom);
-            make.bottom.mas_equalTo(self);
-            make.centerX.mas_equalTo(self);
         }];
         
         // process set nil image problems
@@ -207,6 +204,15 @@
         default:
             break;
     }
+}
+
+#pragma mark - Public Method
+
+- (void)setImageSize:(CGSize)size
+{
+    [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(size);
+    }];
 }
 
 @end

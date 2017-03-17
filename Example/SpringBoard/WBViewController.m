@@ -57,6 +57,7 @@
     _springBoardView.layout.insets = UIEdgeInsetsMake(20, 5, 30, 5);
     _springBoardView.layout.minimumHorizontalSpace = 20;
     _springBoardView.allowSingleItemCombinedCell = NO;
+//    _springBoardView.layout.scrollDirection = WBSpringBoardScrollDirectionVertical;
     
     _springBoardView.innerViewLayout.itemSize = CGSizeMake(90, 90);
     _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 25, 5);
@@ -73,7 +74,7 @@
 
 - (void)modelChangedHandler
 {
-    NSLog(@"MODEL CHANGED: %@", _dataArray);
+    NSLog(@"MODEL CHANGED, YOU CAN SAVE DATA HERE: %@", _dataArray);
 }
 
 #pragma mark - WBSpringBoardViewDelegate Method
@@ -118,6 +119,8 @@
         
         cell = customerCombinedCell;
     }
+//    //Change Image Size If you want
+//    [cell setImageSize:CGSizeMake(100, 100)];
     
     return cell;
 }
@@ -149,6 +152,8 @@
             cell = customerCell;
         }
     }
+//    //Change Image Size If you want
+//    [cell setImageSize:CGSizeMake(100, 100)];
     
     return cell;
 }

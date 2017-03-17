@@ -28,6 +28,7 @@
 
 @interface WBSpringBoardCell : UIControl
 
+@property (nonatomic, readonly) UIView *contentView;
 @property (nonatomic, readonly) UIImageView *imageView;
 @property (nonatomic, readonly) UILabel *label;
 
@@ -38,5 +39,7 @@
 @property (nonatomic, assign) BOOL isEdit;
 
 @property (nonatomic, assign) BOOL showDirectoryHolderView;
+
+- (void)setImageSize:(CGSize)size;
 
 @end

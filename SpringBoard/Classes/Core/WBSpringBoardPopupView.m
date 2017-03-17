@@ -66,6 +66,7 @@
         UIView *contentView = [[UIView alloc] init];
         contentView.backgroundColor = [UIColor whiteColor];
         contentView.layer.cornerRadius = 10;
+        contentView.layer.masksToBounds = YES;
         [self addSubview:contentView];
         _contentView = contentView;
         @WBWeakObj(self);
