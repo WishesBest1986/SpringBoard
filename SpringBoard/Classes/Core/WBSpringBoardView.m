@@ -162,6 +162,7 @@
         WBSpringBoardCell *cell = [[WBSpringBoardCell alloc] init];
         if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:subCellForItemAtIndex:withSuperIndex:)]) {
             cell = [_springBoardDataSource springBoardView:weakself subCellForItemAtIndex:0 withSuperIndex:superIndex];
+            cell.isEdit = self.isEdit;
         }
         
         if (_springBoardDataSource && [_springBoardDataSource respondsToSelector:@selector(springBoardView:moveSubItemAtIndex:toSubIndex:withSuperIndex:)]) {
