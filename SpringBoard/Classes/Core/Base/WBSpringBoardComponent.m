@@ -128,8 +128,8 @@
     CGFloat maximumContentWidth = scrollViewSize.width - (_layout.insets.left + _layout.insets.right);
     CGFloat maximumContentHeight = scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom);
     
-    _colsPerPage = (maximumContentWidth + _layout.minimumHorizontalSpace) / (_layout.itemSize.width + _layout.minimumHorizontalSpace);
-    _rowsPerPage = (maximumContentHeight + _layout.minimumVerticalSpace) / (_layout.itemSize.height + _layout.minimumVerticalSpace);
+    _colsPerPage = MAX((maximumContentWidth + _layout.minimumHorizontalSpace) / (_layout.itemSize.width + _layout.minimumHorizontalSpace), 1);
+    _rowsPerPage = MAX((maximumContentHeight + _layout.minimumVerticalSpace) / (_layout.itemSize.height + _layout.minimumVerticalSpace), 1);
     
     NSInteger onePageMaxItems = _colsPerPage * _rowsPerPage;
     _pages = MAX((_numberOfItems + (onePageMaxItems - 1)) / onePageMaxItems, 1);
