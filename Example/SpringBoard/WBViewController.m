@@ -58,6 +58,7 @@
     _springBoardView.layout.minimumHorizontalSpace = 20;
     _springBoardView.allowSingleItemCombinedCell = NO;
 //    _springBoardView.layout.scrollDirection = WBSpringBoardScrollDirectionVertical;
+    _springBoardView.hiddenOnePageIndicator = YES;
     
     _springBoardView.innerViewLayout.itemSize = CGSizeMake(90, 90);
     _springBoardView.innerViewLayout.insets = UIEdgeInsetsMake(5, 5, 25, 5);

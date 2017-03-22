@@ -79,6 +79,7 @@
     innerView.springBoardComponentDataSource = self;
     innerView.springBoardInnerViewOutsideGestureDelegate = self;
     innerView.layout = _innerViewLayout;
+    innerView.hiddenOnePageIndicator = self.hiddenOnePageIndicator;
     
     WBSpringBoardPopupView *popupView = [[WBSpringBoardPopupView alloc] init];
     [popupView.contentView addSubview:innerView];

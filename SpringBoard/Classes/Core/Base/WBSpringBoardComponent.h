@@ -19,6 +19,7 @@
 @property (nonatomic, assign) BOOL allowOverlapCombination;
 
 @property (nonatomic, assign) BOOL isEdit;
+@property (nonatomic, assign) BOOL hiddenOnePageIndicator;
 
 - (NSInteger)indexForCell:(WBSpringBoardCell *)cell;
 - (void)reloadData;

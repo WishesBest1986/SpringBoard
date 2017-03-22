@@ -38,6 +38,8 @@
 - (void)dealloc
 {
     [self stopDetectFlipTimer];
+    
+    [_pageControl removeObserver:self forKeyPath:@"numberOfPages"];
 }
 
 #pragma mark - Private Method
@@ -69,6 +71,7 @@
         make.bottom.mas_equalTo(pageControl.superview);
     }];
     _pageControl = pageControl;
+    [_pageControl addObserver:self forKeyPath:@"numberOfPages" options:NSKeyValueObservingOptionNew context:nil];
     
     _layout = [[WBSpringBoardLayout alloc] init];
     
@@ -324,6 +327,19 @@
     }
 }
 
+
+#pragma mark - Override Method
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"numberOfPages"]) {
+        NSInteger numberOfPages = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
+        _pageControl.hidden = (_hiddenOnePageIndicator && numberOfPages == 1);
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 #pragma mark - Setter & Getter
 
 - (void)setLayout:(WBSpringBoardLayout *)layout
@@ -364,6 +380,13 @@
             [self stopDetectFlipTimer];
         }
     }
+}
+
+- (void)setHiddenOnePageIndicator:(BOOL)hiddenOnePageIndicator
+{
+    _hiddenOnePageIndicator = hiddenOnePageIndicator;
+    
+    _pageControl.hidden = (hiddenOnePageIndicator && _pageControl.numberOfPages == 1);
 }
 
 #pragma mark - Public Method
