@@ -128,8 +128,8 @@
 - (void)computePages
 {
     CGSize scrollViewSize = _scrollView.bounds.size;
-    CGFloat maximumContentWidth = scrollViewSize.width - (_layout.insets.left + _layout.insets.right);
-    CGFloat maximumContentHeight = scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom);
+    CGFloat maximumContentWidth = ceil(scrollViewSize.width - (_layout.insets.left + _layout.insets.right));
+    CGFloat maximumContentHeight = ceil(scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom));
     
     _colsPerPage = MAX((maximumContentWidth + _layout.minimumHorizontalSpace) / (_layout.itemSize.width + _layout.minimumHorizontalSpace), 1);
     _rowsPerPage = MAX((maximumContentHeight + _layout.minimumVerticalSpace) / (_layout.itemSize.height + _layout.minimumVerticalSpace), 1);
@@ -225,33 +225,37 @@
 - (void)recomputePageAndSortContentCellsWithAnimated:(BOOL)animated
 {
     @WBWeakObj(self);
-    _numberOfItems = 0;
-    if (_springBoardComponentDataSource) {
-        NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
-        _numberOfItems = [_springBoardComponentDataSource numberOfItemsInSpringBoardComponent:weakself];
-    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
     
-    [self computePages];
-    [self computeFrameContainers];
-    
-    [_contentIndexRectArray removeAllObjects];
-    for (NSInteger i = 0; i < _numberOfItems; i ++) {
-        [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:CGRectFromString(_frameContainerArray[i])]];
-    }
-    
-    CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
-    if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
-        t = CGAffineTransformMakeScale(1, _pages);
-    }
-    _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
-    
-    _pageControl.numberOfPages = _pages;
-    _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
-    if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
-        _pageControl.currentPage = MIN(round(_scrollView.contentOffset.y / _scrollView.bounds.size.height), _pages);
-    }
-    
-    [self sortContentCellsWithAnimated:animated];
+        _numberOfItems = 0;
+        if (_springBoardComponentDataSource) {
+            NSAssert([_springBoardComponentDataSource respondsToSelector:@selector(numberOfItemsInSpringBoardComponent:)], @"@selector(numberOfItemsInSpringBoardComponent:) must be implemented");
+            _numberOfItems = [_springBoardComponentDataSource numberOfItemsInSpringBoardComponent:weakself];
+        }
+        
+        [self computePages];
+        [self computeFrameContainers];
+        
+        [_contentIndexRectArray removeAllObjects];
+        for (NSInteger i = 0; i < _numberOfItems; i ++) {
+            [_contentIndexRectArray addObject:[[WBIndexRect alloc] initWithIndex:i rect:CGRectFromString(_frameContainerArray[i])]];
+        }
+        
+        CGAffineTransform t = CGAffineTransformMakeScale(_pages, 1);
+        if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+            t = CGAffineTransformMakeScale(1, _pages);
+        }
+        _scrollView.contentSize = CGSizeApplyAffineTransform(_scrollView.bounds.size, t);
+        
+        _pageControl.numberOfPages = _pages;
+        _pageControl.currentPage = MIN(round(_scrollView.contentOffset.x / _scrollView.bounds.size.width), _pages);
+        if (_layout.scrollDirection == WBSpringBoardScrollDirectionVertical) {
+            _pageControl.currentPage = MIN(round(_scrollView.contentOffset.y / _scrollView.bounds.size.height), _pages);
+        }
+        
+        [self sortContentCellsWithAnimated:animated];
+        
+    });
 }
 
 - (void)startDetectFlipTimer
