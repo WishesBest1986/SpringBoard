@@ -147,6 +147,13 @@
     CGFloat itemHSpace = (scrollViewSize.width - (_layout.insets.left + _layout.insets.right) - _colsPerPage * itemSize.width) / (_colsPerPage - 1);
     CGFloat itemVSpace = (scrollViewSize.height - (_layout.insets.top + _layout.insets.bottom) - _rowsPerPage * itemSize.height) / (_rowsPerPage - 1);
     
+    if (isnan(itemHSpace) || isinf(itemHSpace)) {
+        itemHSpace = _layout.minimumHorizontalSpace;
+    }
+    if (isnan(itemVSpace) || isinf(itemVSpace)) {
+        itemVSpace = _layout.minimumVerticalSpace;
+    }
+    
     for (NSInteger page = 0; page < _pages; page ++) {
         for (NSInteger row = 0; row < _rowsPerPage; row ++) {
             for (NSInteger col = 0; col < _colsPerPage; col ++) {
