@@ -303,6 +303,15 @@
 {
     [super springBoardCell:cell longGestureStateEnd:gesture];
     
+    // ----- 2017-04-28 modify begin -----
+    // fix drag out of combineCell then drag into this combineCell again, crash bug.
+    
+    // In this condition, method [super springBoardCell:longGestureStateEnd:] will replace original combineCell(springBoarderInnerView.superCell), then springBoarderInnerView.superCell no longer contained by self.contentCellArray
+    if (![self.contentCellArray containsObject:springBoardInnerView.superCell]) {
+        springBoardInnerView.superCell = [self.contentCellArray objectAtIndex:springBoardInnerView.superIndex];
+    }
+    // ----- 2017-04-28 modify end -----
+    
     cell.delegate = self;
     cell.longGestureDelegate = self;
     [self afterGestureCheckSpringBoardInnerView:springBoardInnerView];
